@@ -781,7 +781,6 @@ function scrollToSec(s){ const e=$(s); if(e) e.scrollIntoView({behavior:'smooth'
 /* ═══════════ YN ═══════════ */
 function setYN(group,v){
   if(group==='prox'){ $('proximidad').value=v; setYNbtns('ynProx',v); }
-  if(group==='cancel'){ $('cancelada').value=v; setYNbtns('ynCancel',v); }
   updateConds();
 }
 function setYNbtns(wrap,v){
@@ -843,8 +842,6 @@ function updateConds(){
   show('condZonaSegura', au.includes('ZONA') && au.includes('SEGURA'));
   show('condTallerEE', au.includes('TALLER') && t==='ENTORNOS ESCOLARES');
   show('condTallerConv', au.includes('TALLER') && t==='CONVIVENCIA');
-  // cancelada
-  show('condRazon', $('cancelada').value==='SI');
   updateIndVisibility();
 }
 
