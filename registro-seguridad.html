@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Registro de Actividades SYC · Engativá</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#1e3a8a;--primary-mid:#2563eb;--primary-light:#3b82f6;
+  --primary-dark:#1e293b;--accent:#f59e0b;--success:#10b981;
+  --danger:#ef4444;--bg:#f8fafc;--card:#fff;
+  --text:#0f172a;--muted:#64748b;--border:#e2e8f0;--shadow:rgba(15,23,42,.10);
+  /* componentes (grupos de indicadores) */
+  --c1:#1e40af;--c1bg:#dbeafe;  /* control PONAL */
+  --c2:#92400e;--c2bg:#ffedd5;  /* habitabilidad */
+  --c3:#b91c1c;--c3bg:#fee2e2;  /* incautaciones */
+  --c4:#166534;--c4bg:#dcfce7;  /* recuperaciones */
+  --c5:#7c3aed;--c5bg:#ede9fe;  /* comparendos/abordaje */
+  --c6:#0891b2;--c6bg:#cffafe;  /* registro mi bici */
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#f8fafc,#e0f2fe);min-height:100vh;color:var(--text);overflow-x:hidden}
+.app{display:flex;flex-direction:column;min-height:100vh}
+.app-body{display:flex;flex:1;max-width:1200px;margin:0 auto;width:100%;gap:0}
+/* SIDEBAR */
+.sidebar{width:220px;flex-shrink:0;background:#fff;border-right:1px solid var(--border);min-height:calc(100vh - 72px);padding:20px 0;position:sticky;top:72px;height:calc(100vh - 72px);overflow-y:auto}
+.sidebar-section{padding:0 16px;margin-bottom:6px}
+.sidebar-label{font-size:.6rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:12px 16px 6px;display:block}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 16px;border-radius:10px;margin:2px 8px;cursor:pointer;font-size:.82rem;font-weight:600;color:var(--muted);border:none;background:transparent;width:calc(100% - 16px);text-align:left;transition:all .2s;font-family:inherit}
+.nav-item:hover{background:#f1f5f9;color:var(--text)}
+.nav-item.on{background:var(--primary);color:#fff;box-shadow:0 3px 10px rgba(30,58,138,.25)}
+.nav-item .nav-badge{margin-left:auto;background:rgba(255,255,255,.25);color:#fff;font-size:.65rem;font-weight:800;padding:2px 8px;border-radius:999px;min-width:28px;text-align:center}
+.nav-item:not(.on) .nav-badge{background:#e0e7ff;color:var(--primary)}
+.nav-divider{height:1px;background:var(--border);margin:10px 16px}
+.nav-footer{padding:16px;font-size:.68rem;color:var(--muted);line-height:1.7;margin-top:auto}
+.sidebar-conf-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;margin:2px 8px;cursor:pointer;font-size:.78rem;font-weight:700;color:var(--muted);border:none;background:transparent;width:calc(100% - 16px);text-align:left;font-family:inherit;letter-spacing:.04em;text-transform:uppercase}
+.sidebar-conf-btn:hover{background:#f1f5f9}
+/* MAIN CONTENT */
+.main-content{flex:1;min-width:0;padding-bottom:90px}
+/* HEADER */
+.hdr{background:linear-gradient(135deg,var(--primary-dark),var(--primary));color:#fff;padding:1.4rem 1.5rem 1.2rem;position:sticky;top:0;z-index:30;overflow:hidden;width:100%}
+.hdr::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;background:rgba(255,255,255,.05);border-radius:50%}
+.hdr-inner{position:relative;z-index:1}
+.tag{display:inline-flex;align-items:center;gap:6px;font-size:.67rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.8);background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:20px;padding:3px 10px;margin-bottom:8px}
+.dot{width:6px;height:6px;border-radius:50%;background:#10b981;animation:blink 2s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.4}}
+h1{font-size:clamp(1.05rem,3vw,1.35rem);font-weight:800;color:#fff;line-height:1.2}
+h1 span{color:var(--accent)}
+.sub{font-size:.72rem;color:rgba(255,255,255,.65);margin-top:.2rem}
+#fbStatus{margin-left:8px;font-size:.62rem;opacity:.85}
+/* TABS */
+.mview{display:none}.mview.on{display:block}
+@media(max-width:700px){.sidebar{display:none}.app-body{flex-direction:column}}
+/* SECTION NAV */
+.sec-nav{display:flex;overflow-x:auto;gap:0;background:#fff;border-bottom:2px solid var(--border);padding:0 .75rem;scrollbar-width:none}
+.sec-nav::-webkit-scrollbar{display:none}
+.snav-btn{flex-shrink:0;font-family:inherit;font-size:.71rem;font-weight:600;padding:.6rem .8rem;border:none;background:transparent;color:var(--muted);cursor:pointer;border-bottom:2.5px solid transparent;transition:all .2s;white-space:nowrap;position:relative}
+.snav-btn:hover{color:var(--primary)}
+.snav-btn.on{color:var(--primary);border-bottom-color:var(--primary)}
+.snav-btn .bd{display:none;width:7px;height:7px;border-radius:50%;background:var(--danger);position:absolute;top:5px;right:3px}
+.snav-btn.miss .bd{display:block}
+/* CONTENT */
+.ca{padding:1.2rem 1rem}
+.sp{display:block;margin-bottom:6px}
+@keyframes fi{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:translateY(0)}}
+.stitle{font-size:.67rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--primary);margin-bottom:14px;display:flex;align-items:center;gap:10px}
+.stitle::after{content:'';flex:1;height:1.5px;background:var(--border)}
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px;margin-bottom:14px;box-shadow:0 2px 8px var(--shadow)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+@media(max-width:600px){.g2,.g3,.g4{grid-template-columns:1fr}}
+.f{display:flex;flex-direction:column;gap:5px}
+label{font-size:.65rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+label .req{color:var(--danger);margin-left:2px}
+input,select,textarea{background:#fff;border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:inherit;font-size:.84rem;padding:8px 11px;transition:border-color .2s,box-shadow .2s;outline:none;width:100%}
+input:focus,select:focus,textarea:focus{border-color:var(--primary-light);box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+input.inv,select.inv,textarea.inv{border-color:var(--danger)!important;box-shadow:0 0 0 3px rgba(239,68,68,.1)!important}
+input::placeholder{color:#94a3b8}
+textarea{resize:vertical;min-height:80px;line-height:1.5}
+.hint{font-size:.65rem;color:var(--muted);margin-top:2px}
+/* YN */
+.yn{display:flex;gap:8px}
+.yn-btn{flex:1;padding:8px;border-radius:8px;border:1.5px solid var(--border);background:#fff;color:var(--muted);font-family:inherit;font-size:.78rem;font-weight:600;cursor:pointer;transition:all .2s}
+.yn-btn.y{background:#dcfce7;border-color:#16a34a;color:#166534}
+.yn-btn.n{background:#fee2e2;border-color:#dc2626;color:#991b1b}
+/* CHIPS */
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{cursor:pointer;font-size:.74rem;font-weight:600;padding:5px 13px;border-radius:999px;border:1.5px solid var(--border);background:#fff;color:var(--muted);transition:all .2s;user-select:none}
+.chip:hover{border-color:var(--primary-light);color:var(--primary);background:#eff6ff}
+.chip.on{background:var(--primary);border-color:var(--primary);color:#fff}
+/* COND */
+.cond{display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}.cond.on{display:block}
+/* COMP HEADERS */
+.ch{border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:.8rem;font-weight:700;display:flex;align-items:center;gap:8px}
+.ind-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+.ind .f label{text-transform:none;letter-spacing:0;font-size:.68rem;color:var(--text);font-weight:600;min-height:30px}
+/* ADDRESS BUILDER */
+.ab{background:#f8fafc;border:1.5px solid var(--border);border-radius:10px;padding:14px;margin-bottom:8px}
+.ab-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:10px}
+.ab-row select,.ab-row input{flex:1;min-width:60px}
+.ab-sep{font-weight:800;color:var(--muted);font-size:.95rem;flex-shrink:0}
+.ab-prev{background:#fff;border:1.5px solid var(--primary-light);border-radius:8px;padding:10px 14px;font-size:.85rem;font-weight:700;color:var(--primary);min-height:36px;display:flex;align-items:center}
+.ab-prev.empty{color:#94a3b8;font-weight:400;font-size:.78rem}
+/* RESULTS */
+.rec{background:#fff;border:1px solid var(--border);border-left:4px solid var(--primary);border-radius:12px;padding:14px 16px;margin-bottom:10px;box-shadow:0 1px 4px var(--shadow);cursor:pointer;transition:all .15s}
+.rec:hover{box-shadow:0 4px 12px var(--shadow);transform:translateY(-1px)}
+.rec.cancel{border-left-color:var(--danger);opacity:.85}
+.rec-top{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;align-items:flex-start}
+.rec-tit{font-size:.92rem;font-weight:800;color:var(--text)}
+.rec-meta{font-size:.72rem;color:var(--muted);margin-top:3px;line-height:1.5}
+.rec-badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.bdg{font-size:.62rem;font-weight:700;padding:2px 9px;border-radius:999px;background:#eff6ff;color:var(--primary);border:1px solid #bfdbfe}
+.bdg.t-SEGURIDAD{background:#dbeafe;color:#1e40af;border-color:#93c5fd}
+.bdg.t-CONVIVENCIA{background:#dcfce7;color:#166534;border-color:#86efac}
+.bdg.t-ENTORNOS{background:#ffedd5;color:#92400e;border-color:#fed7aa}
+.bdg.t-MESAS{background:#ede9fe;color:#6d28d9;border-color:#ddd6fe}
+.bdg.t-DDHH{background:#fce7f3;color:#9d174d;border-color:#fbcfe8}
+.bdg.cancel{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
+/* BUTTONS */
+.btn{font-family:inherit;font-weight:700;font-size:.82rem;padding:10px 18px;border-radius:10px;border:none;cursor:pointer;transition:all .2s;display:inline-flex;align-items:center;gap:7px;justify-content:center}
+.btn-pri{background:var(--primary);color:#fff;box-shadow:0 3px 10px rgba(30,58,138,.3)}
+.btn-pri:hover{background:var(--primary-mid)}
+.btn-ghost{background:#fff;color:var(--primary);border:1.5px solid var(--border)}
+.btn-ghost:hover{border-color:var(--primary-light);background:#eff6ff}
+.btn-danger{background:#fee2e2;color:#991b1b;border:1.5px solid #fca5a5}
+.btn-sm{font-size:.74rem;padding:7px 13px}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.save-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);padding:12px 1rem;display:flex;gap:10px;justify-content:center;z-index:25;box-shadow:0 -2px 12px var(--shadow)}
+.save-bar .inner{max-width:980px;width:100%;display:flex;gap:10px;justify-content:flex-end}
+/* AUDIT */
+.aud-ok{background:#f0fdf4;border:1.5px solid #86efac;border-radius:12px;padding:20px;text-align:center;margin-bottom:14px}
+.aud-issues{background:#fff7ed;border:1.5px solid #fed7aa;border-radius:12px;padding:16px;margin-bottom:14px}
+.aud-ttl{font-size:.8rem;font-weight:800;color:#9a3412;margin-bottom:10px}
+.aud-item{display:flex;align-items:center;gap:10px;padding:8px 10px;border-radius:8px;margin-bottom:4px;cursor:pointer;background:#fff}
+.aud-item:hover{background:rgba(234,88,12,.08)}
+.aud-item .l{font-size:.78rem;flex:1}.aud-item .s{font-size:.65rem;color:var(--muted)}
+/* MODAL */
+.ov{position:fixed;inset:0;background:rgba(15,23,42,.55);display:none;align-items:center;justify-content:center;z-index:60;padding:1rem}
+.ov.on{display:flex}
+.mdl{background:#fff;border-radius:16px;max-width:440px;width:100%;padding:24px;box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.mdl h3{font-size:1rem;font-weight:800;margin-bottom:6px}
+.mdl p{font-size:.82rem;color:var(--muted);margin-bottom:16px;line-height:1.5}
+/* TOAST */
+#toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--primary-dark);color:#fff;padding:12px 22px;border-radius:30px;font-size:.82rem;font-weight:600;opacity:0;pointer-events:none;transition:all .3s;z-index:80;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+#toast.err{background:#991b1b}#toast.ok{background:#166534}
+/* FILTERS */
+.fil{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:14px;display:none}
+.fil.on{display:block}
+.cnt{font-size:.72rem;color:var(--muted)}
+.cnt b{color:var(--primary);font-size:.9rem}
+/* DASH */
+.kpi{background:#fff;border:1px solid var(--border);border-radius:12px;padding:14px;text-align:center;box-shadow:0 1px 4px var(--shadow)}
+.kpi .n{font-size:1.5rem;font-weight:800;color:var(--primary)}
+.kpi .l{font-size:.64rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-top:2px;font-weight:700}
+.barrow{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.barrow .lbl{font-size:.72rem;width:160px;flex-shrink:0;font-weight:600}
+.barrow .track{flex:1;height:18px;background:#f1f5f9;border-radius:6px;overflow:hidden}
+.barrow .fill{height:100%;background:linear-gradient(90deg,var(--primary-mid),var(--primary-light));border-radius:6px}
+.barrow .v{font-size:.72rem;font-weight:700;width:42px;text-align:right;flex-shrink:0}
+.empty{text-align:center;padding:50px 20px;color:var(--muted)}
+.empty .ico{font-size:2.5rem;margin-bottom:10px}
+.cfgbanner{background:#fef3c7;border:1px solid #fcd34d;color:#92400e;font-size:.74rem;padding:8px 14px;text-align:center;font-weight:600}
+.cfgbanner.hide{display:none}
+/* STATS BAR */
+.stats-bar{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.stat-card{border-radius:10px;padding:12px 16px;display:flex;align-items:center;gap:12px}
+.stat-card.con-acta{background:#f0fdf4;border:1.5px solid #86efac}
+.stat-card.sin-acta{background:#fff7ed;border:1.5px solid #fed7aa}
+.stat-card.pct{background:#eff6ff;border:1.5px solid #93c5fd}
+.stat-ico{font-size:1.4rem;flex-shrink:0}
+.stat-val{font-size:1.5rem;font-weight:800;line-height:1}
+.stat-lbl{font-size:.6rem;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
+.stat-card.con-acta .stat-val{color:#16a34a}
+.stat-card.con-acta .stat-lbl{color:#166534}
+.stat-card.sin-acta .stat-val{color:#d97706}
+.stat-card.sin-acta .stat-lbl{color:#92400e}
+.stat-card.pct .stat-val{color:var(--primary)}
+.stat-card.pct .stat-lbl{color:#1e40af}
+@media(max-width:500px){.stats-bar{grid-template-columns:1fr}}
+
+
+/* ENT DROPDOWN */
+#entDropPanel .ent-opt{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:7px;cursor:pointer;font-size:.8rem;font-weight:500;transition:background .15s}
+#entDropPanel .ent-opt:hover{background:#eff6ff}
+#entDropPanel .ent-opt.on{background:#dbeafe;color:var(--primary);font-weight:700}
+#entDropPanel .ent-opt .chk{width:16px;height:16px;border-radius:4px;border:2px solid var(--border);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:.6rem}
+#entDropPanel .ent-opt.on .chk{background:var(--primary);border-color:var(--primary);color:#fff}
+.ent-tag{display:inline-flex;align-items:center;gap:4px;background:#dbeafe;color:var(--primary);border:1px solid #93c5fd;border-radius:999px;padding:3px 10px;font-size:.7rem;font-weight:700}
+.ent-tag button{background:none;border:none;cursor:pointer;color:var(--primary);font-size:.75rem;line-height:1;padding:0 0 0 2px}
+/* TARJETAS ESTILO REGISTRO-OPERATIVOS */
+.rec{background:#fff;border:1px solid var(--border);border-radius:12px;padding:0;margin-bottom:10px;box-shadow:0 1px 4px var(--shadow);cursor:pointer;transition:all .15s;overflow:hidden;display:flex;gap:0}
+.rec:hover{box-shadow:0 4px 14px var(--shadow);transform:translateY(-1px)}
+.rec.cancel{opacity:.85}
+.rec-num{width:64px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1rem;font-weight:800;color:var(--muted);background:#f8fafc;border-right:1px solid var(--border);font-variant-numeric:tabular-nums}
+.rec-body{flex:1;padding:12px 14px}
+.rec-top{display:flex;justify-content:space-between;gap:8px;align-items:flex-start}
+.rec-tit{font-size:.88rem;font-weight:800;color:var(--text);line-height:1.3}
+.rec-meta{font-size:.71rem;color:var(--muted);margin-top:4px;line-height:1.6}
+.rec-badges{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px;align-items:center}
+.rec-acta{display:inline-flex;align-items:center;gap:4px;font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:999px;background:#f0fdf4;color:#166534;border:1px solid #86efac;text-decoration:none;cursor:pointer}
+.rec-acta:hover{background:#dcfce7}
+.rec-sin-acta{display:inline-flex;align-items:center;gap:4px;font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:999px;background:#fff7ed;color:#92400e;border:1px solid #fed7aa}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- HEADER -->
+  <div class="hdr"><div class="hdr-inner">
+    <span class="tag"><span class="dot"></span> Alcaldía Local de Engativá <span id="fbStatus">⏳ Conectando…</span></span>
+    <h1>Registro de Actividades <span>SYC</span></h1>
+    <div class="sub">Registro de actividades de la Oficina de Seguridad y Convivencia · FDLE 2026</div>
+  </div></div>
+
+  <div id="cfgBanner" class="cfgbanner hide"></div>
+
+  <div class="app-body">
+    <!-- SIDEBAR -->
+    <nav class="sidebar">
+      <span class="sidebar-label">Navegación</span>
+      <button class="nav-item on" data-view="recs" onclick="showView('recs')">
+        📋 Resultados <span class="nav-badge" id="sideCount">0</span>
+      </button>
+      <button class="nav-item" data-view="dash" onclick="showView('dash')">
+        📊 Dashboard
+      </button>
+      <button class="nav-item" data-view="form" onclick="showView('form')">
+        ✦ Nuevo registro
+      </button>
+
+      <div class="nav-divider"></div>
+      <span class="sidebar-label">Datos</span>
+      <button class="nav-item" onclick="exportExcel()">
+        ⬇️ Exportar Excel
+      </button>
+      <button class="nav-item" onclick="askPin('Importar Excel','Ingresa el PIN para importar.',()=>document.getElementById('impFile').click())">
+        ⬆️ Importar Excel
+      </button>
+      <input type="file" id="impFile" accept=".xlsx,.xls" style="display:none" onchange="importExcel(this)">
+      <button class="nav-item" style="color:#ef4444" onclick="borrarImportados()">
+        🗑️ Borrar importados
+      </button>
+
+      <div class="nav-divider"></div>
+      <button class="sidebar-conf-btn">⚙ Configuración ▾</button>
+      <div class="nav-footer">
+        SYC · IVC<br>Alcaldía Engativá<br>2026
+      </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+
+  <!-- ════════ VISTA RESULTADOS ════════ -->
+  <div class="mview on" id="mview-recs">
+    <div class="ca">
+      <div class="bar" style="justify-content:space-between;margin-bottom:12px">
+        <div class="cnt"><b id="recCount">0</b> actividades</div>
+        <div class="bar">
+          <button class="btn btn-ghost btn-sm" onclick="toggleFil()">🔍 Filtros</button>
+        </div>
+      </div>
+
+      <div class="fil" id="filPanel">
+        <div class="g3">
+          <div class="f"><label>Buscar (lugar/dirección/responsable)</label><input type="text" id="fTxt" oninput="renderRecs()" placeholder="texto…"></div>
+          <div class="f"><label>Temática</label><select id="fTema" onchange="renderRecs()"><option value="">Todas</option></select></div>
+          <div class="f"><label>UPZ</label><select id="fUpz" onchange="renderRecs()"><option value="">Todas</option></select></div>
+        </div>
+        <div class="g3" style="margin-top:10px">
+          <div class="f"><label>Desde</label><input type="date" id="fDesde" onchange="renderRecs()"></div>
+          <div class="f"><label>Hasta</label><input type="date" id="fHasta" onchange="renderRecs()"></div>
+
+        </div>
+        <div class="bar" style="margin-top:12px"><button class="btn btn-ghost btn-sm" onclick="clearFil()">Limpiar filtros</button></div>
+      </div>
+
+      <div class="stats-bar" id="statsBar" style="display:none">
+        <div class="stat-card con-acta">
+          <div class="stat-ico">🔗</div>
+          <div><div class="stat-lbl">Con acta cargada</div><div class="stat-val" id="statConActa">0</div></div>
+        </div>
+        <div class="stat-card sin-acta">
+          <div class="stat-ico">⚠️</div>
+          <div><div class="stat-lbl">Sin acta cargada</div><div class="stat-val" id="statSinActa">0</div></div>
+        </div>
+        <div class="stat-card pct">
+          <div class="stat-ico">📊</div>
+          <div><div class="stat-lbl">% Cumplimiento</div><div class="stat-val" id="statPct">0%</div></div>
+        </div>
+      </div>
+      <div id="recsList"></div>
+    </div>
+  </div>
+
+  <!-- ════════ VISTA FORMULARIO ════════ -->
+  <div class="mview" id="mview-form">
+    <div class="ca">
+      <!-- S1 IDENTIFICACIÓN -->
+      <div class="sp on" id="s1">
+        <div class="stitle">01 · Identificación</div>
+        <div class="card">
+          <div class="g2">
+            <div class="f"><label>Responsable de la actividad <span class="req">*</span></label>
+              <input type="text" id="responsable" list="dlResp" data-req data-lbl="Responsable" data-sec="s1" placeholder="Nombre completo"><datalist id="dlResp"></datalist></div>
+            <div class="f"><label>Fecha de la actividad <span class="req">*</span></label><input type="date" id="fecha" data-req data-lbl="Fecha" data-sec="s1"></div>
+          </div>
+          <div class="g2" style="margin-top:14px">
+            <div class="f"><label>Hora de inicio (24h)</label><input type="time" id="horaInicio" data-sec="s1"></div>
+            <div class="f"><label>Hora de finalización (24h)</label><input type="time" id="horaFin" data-sec="s1"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S2 UBICACIÓN -->
+      <div class="sp" id="s2">
+        <div class="stitle">02 · Ubicación</div>
+        <div class="card">
+          <div class="g2">
+            <div class="f"><label>Lugar <span class="req">*</span></label><input type="text" id="lugar" data-req data-lbl="Lugar" data-sec="s2" placeholder="Ej: CAI Calle 80, Colegio…, Parque…"></div>
+            <div class="f"><label>Modalidad <span class="req">*</span></label>
+              <select id="modalidad" data-req data-lbl="Modalidad" data-sec="s2" onchange="updateConds()"><option value="">—</option><option>PRESENCIAL</option><option>VIRTUAL</option></select></div>
+          </div>
+
+          <div style="margin-top:14px">
+            <label>Dirección</label>
+            <div class="ab">
+              <div class="ab-row">
+                <select id="abVia"><option value="">Vía</option><option>CL</option><option>CR</option><option>AV CL</option><option>AV CR</option><option>AK</option><option>AC</option><option>DG</option><option>TV</option><option>BIS</option></select>
+                <input type="text" id="abN1" placeholder="No." oninput="composeDir()">
+                <input type="text" id="abL1" placeholder="Letra" style="max-width:70px" oninput="composeDir()">
+                <span class="ab-sep">#</span>
+                <input type="text" id="abN2" placeholder="No." oninput="composeDir()">
+                <input type="text" id="abL2" placeholder="Letra" style="max-width:70px" oninput="composeDir()">
+                <span class="ab-sep">–</span>
+                <input type="text" id="abN3" placeholder="Placa" oninput="composeDir()">
+              </div>
+              <input type="text" id="dir" data-sec="s2" placeholder="O escribe manual: AV CL 80 # 114 – 92" oninput="markDirManual()">
+            </div>
+          </div>
+
+          <div class="g2" style="margin-top:14px">
+            <div class="f"><label>UPZ <span class="req">*</span></label>
+              <select id="upz" data-req data-lbl="UPZ" data-sec="s2" onchange="onUpzChange()"><option value="">—</option></select></div>
+            <div class="f"><label>Barrio <span class="req">*</span></label>
+              <select id="barrio" data-req data-lbl="Barrio" data-sec="s2" onchange="updateConds()"><option value="">Selecciona UPZ primero</option></select></div>
+          </div>
+          <div class="cond" id="condBarrioOtro">
+            <div class="f"><label>Nombre del barrio (otro)</label><input type="text" id="barrioOtro" data-sec="s2" placeholder="Escribe el barrio"></div>
+          </div>
+
+          <div style="margin-top:14px">
+            <label>¿Proximidad a un entorno?</label>
+            <div class="yn" id="ynProx"><button type="button" class="yn-btn" data-v="SI" onclick="setYN('prox','SI')">SÍ</button><button type="button" class="yn-btn" data-v="NO" onclick="setYN('prox','NO')">NO</button></div>
+            <input type="hidden" id="proximidad" data-sec="s2">
+            <div class="cond" id="condEntorno">
+              <div class="f"><label>Tipo de entorno</label>
+                <select id="tipoEntorno" onchange="updateConds()"><option value="">—</option><option>ENTORNOS ESCOLARES</option><option>PARQUES</option></select></div>
+              <div class="cond" id="condColegio" style="margin-top:10px">
+                <div class="f"><label>Entorno escolar (colegio)</label><input type="text" id="entornoEscolar" list="dlColegios" placeholder="Nombre del colegio"><datalist id="dlColegios"></datalist></div>
+              </div>
+              <div class="cond" id="condParque" style="margin-top:10px">
+                <div class="f"><label>Nombre del parque</label><input type="text" id="nombreParque" placeholder="Nombre del parque"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S3 ACTIVIDAD -->
+      <div class="sp" id="s3">
+        <div class="stitle">03 · Temática y actividad</div>
+        <div class="card">
+          <div class="f"><label>Temática <span class="req">*</span></label>
+            <select id="tematica" data-req data-lbl="Temática" data-sec="s3" onchange="onTemaChange()"><option value="">—</option>
+              <option>SEGURIDAD</option><option>CONVIVENCIA</option><option>ENTORNOS ESCOLARES</option><option>MESAS DE TRABAJO</option><option>DD.HH.</option><option>OTRO</option></select></div>
+
+          <div class="cond" id="condActSel" style="margin-top:12px">
+            <div class="f"><label>Actividad <span class="req">*</span></label>
+              <select id="actividadSel" data-lbl="Actividad" data-sec="s3" onchange="updateConds()"><option value="">Selecciona temática primero</option></select></div>
+          </div>
+          <div class="cond" id="condActOtro" style="margin-top:12px">
+            <div class="f"><label>Describe la actividad <span class="req">*</span></label>
+              <select id="actividadOtro" data-lbl="Actividad (otro)" data-sec="s3" onchange="updateConds()"><option value="">—</option><option>OPERATIVOS IVC</option><option>ACOMPAÑAMIENTO PROCESO CLP</option><option>DESPACHOS COMISORIOS</option><option>CLP 885 - 2024</option><option>CLP 615 - 2025</option></select></div>
+          </div>
+
+          <!-- condicionales -->
+          <div class="cond" id="condCLP" style="margin-top:12px">
+            <div class="f"><label>Número de CLP</label><input type="number" id="numeroCLP" min="0" placeholder="0"></div>
+          </div>
+          <div class="cond" id="condRecorrido" style="margin-top:12px">
+            <div class="f"><label>Temática del recorrido de abordaje</label>
+              <select id="tematicaRecorrido"><option value="">—</option></select></div>
+          </div>
+          <div class="cond" id="condZonaSegura" style="margin-top:12px">
+            <div class="f"><label>Tipo de jornada de zona segura</label>
+              <select id="tipoJornadaZS"><option value="">—</option><option>CONFORMACIÓN</option><option>SOCIALIZACIÓN</option><option>INAUGURACIÓN</option><option>FORTALECIMIENTO</option></select></div>
+          </div>
+          <div class="cond" id="condTallerEE" style="margin-top:12px">
+            <div class="f"><label>Temática del taller (entornos escolares)</label>
+              <select id="tematicaTallerEE"><option value="">—</option><option>PREVENCIÓN DE VIOLENCIAS</option><option>RESOLUCIÓN DE CONFLICTOS</option><option>PREVENCIÓN DE CONSUMO SPA</option><option>PREVENCIÓN DE ACOSO ESCOLAR</option></select></div>
+          </div>
+          <div class="cond" id="condTallerConv" style="margin-top:12px">
+            <div class="f"><label>Temática del taller (convivencia)</label>
+              <select id="tematicaTallerConv"><option value="">—</option><option>IDENTIFICACIÓN DE RIESGOS EN SYC</option><option>RESOLUCIÓN DE CONFLICTOS</option><option>RUTAS Y CANALES DE ATENCIÓN</option><option>OTROS</option></select></div>
+          </div>
+        </div>
+
+
+      </div>
+
+      <!-- S4 DESARROLLO -->
+      <div class="sp" id="s4">
+        <div class="stitle">04 · Desarrollo</div>
+        <div class="card">
+          <div class="f"><label>Desarrollo de la actividad</label><textarea id="desarrollo" style="min-height:160px" placeholder="Describe el desarrollo de la actividad…"></textarea></div>
+          <div class="f" style="margin-top:14px"><label>Observaciones o novedades</label><textarea id="observaciones" placeholder="NO APLICA / N/A si no hay"></textarea></div>
+          <div class="f" style="margin-top:14px"><label>Compromisos adquiridos</label><textarea id="compromisos" placeholder="Compromisos (si aplica)"></textarea></div>
+        </div>
+      </div>
+
+      <!-- S5 INDICADORES -->
+      <div class="sp" id="s5">
+        <div class="stitle">05 · Indicadores y resultados</div>
+        <div class="hint" id="indHint" style="margin-bottom:12px">Deja en 0 lo que no aplique. Estos valores alimentan el Resumen.</div>
+        <div id="indContainer"></div>
+        <div class="card" id="otrosCard">
+          <div class="f"><label>Otros resultados</label><textarea id="otrosResultados" placeholder="0 si no aplica"></textarea></div>
+        </div>
+      </div>
+
+      <!-- S6 ENTIDADES -->
+      <div class="sp" id="s6">
+        <div class="stitle">06 · Entidades que acompañan</div>
+        <div class="card">
+          <div class="f">
+            <label>Selecciona las entidades que acompañaron</label>
+            <div style="position:relative">
+              <div id="entDropBtn" onclick="toggleEntDrop()" style="cursor:pointer;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:8px 11px;font-size:.84rem;color:var(--text);min-height:38px;display:flex;align-items:center;justify-content:space-between;gap:8px;user-select:none">
+                <span id="entDropLabel" style="color:#94a3b8">Ninguna seleccionada</span>
+                <span style="font-size:.7rem;color:var(--muted)">▼</span>
+              </div>
+              <div id="entDropPanel" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid var(--primary-light);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:50;max-height:220px;overflow-y:auto;padding:6px">
+                <div id="entDropList"></div>
+                <div style="border-top:1px solid var(--border);padding:8px 6px 4px;margin-top:4px">
+                  <div style="font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Otra entidad</div>
+                  <div class="bar"><input type="text" id="entOtra" placeholder="Nombre de la entidad" style="flex:1;font-size:.8rem"><button class="btn btn-ghost btn-sm" onclick="addEntOtra()">+ Agregar</button></div>
+                </div>
+              </div>
+            </div>
+            <div id="entTags" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- S7 ACTA -->
+      <div class="sp" id="s7">
+        <div class="stitle">07 · Link del acta</div>
+        <div class="card">
+          <div class="f">
+            <label>URL del acta de la actividad</label>
+            <input type="url" id="linkActa" placeholder="https://drive.google.com/...">
+            <div class="hint">Pega aquí el enlace de OneDrive, Drive o cualquier plataforma donde esté el acta.</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ════════ VISTA RESUMEN ════════ -->
+  <div class="mview" id="mview-dash" style="background:#0d1b2a;min-height:calc(100vh - 72px)">
+    <div style="display:flex;height:calc(100vh - 72px)">
+
+      <!-- Sidebar izquierdo: temáticas -->
+      <div id="dash-left" style="width:180px;flex-shrink:0;background:#0a1628;border-right:1px solid #1e3a5f;display:flex;flex-direction:column;padding:0;overflow-y:auto">
+        <div style="padding:14px 12px 8px">
+          <div style="font-size:.6rem;font-weight:800;color:#f59e0b;text-transform:uppercase;letter-spacing:.08em;margin-bottom:12px;text-align:center">ACTIVIDADES SYC 2026</div>
+          <div id="dash-temas" style="display:flex;flex-direction:column;gap:2px"></div>
+        </div>
+      </div>
+
+      <!-- Columna derecha: filtros + contenido -->
+      <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+        <!-- BARRA DE FILTROS -->
+        <div style="background:#0d1b2a;padding:8px 14px;display:flex;gap:12px;align-items:flex-end;border-bottom:1px solid #1e3a5f;flex-wrap:wrap">
+
+          <!-- UPZ -->
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <div style="font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#a0b4c8">UPZ</div>
+            <select id="dash-upz-syc" onchange="renderDash()" style="background:#0a1628;color:#e0f0ff;border:1px solid #1e3a5f;border-radius:4px;padding:4px 8px;font-family:'Inter',sans-serif;font-size:.72rem;min-width:130px">
+              <option value="">All</option>
+            </select>
+          </div>
+
+          <!-- BARRIO multi-selector -->
+          <div style="display:flex;flex-direction:column;gap:2px;position:relative" id="dash-barrio-wrap">
+            <div style="font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#a0b4c8">BARRIO</div>
+            <button id="dash-barrio-btn" onclick="toggleDashBarrioDropdown(event)"
+              style="background:#0a1628;color:#e0f0ff;border:1px solid #1e3a5f;border-radius:4px;padding:4px 8px;font-family:'Inter',sans-serif;font-size:.72rem;min-width:130px;text-align:left;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:6px">
+              <span id="dash-barrio-label" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">All</span>
+              <span style="color:#4a7fa5;font-size:.6rem;flex-shrink:0">▼</span>
+            </button>
+            <div id="dash-barrio-panel" style="display:none;position:absolute;top:100%;left:0;z-index:200;background:#0a1628;border:1px solid #1e3a5f;border-radius:6px;min-width:200px;max-height:240px;box-shadow:0 8px 24px rgba(0,0,0,.5);margin-top:3px">
+              <div style="padding:6px 8px;border-bottom:1px solid #1e3a5f;display:flex;gap:6px">
+                <button onclick="dashBarrioSelAll()" style="flex:1;background:#1e3a5f;color:#e0f0ff;border:none;border-radius:4px;padding:3px 6px;font-family:'Inter',sans-serif;font-size:.6rem;font-weight:700;cursor:pointer">Todos</button>
+                <button onclick="dashBarrioSelNone()" style="flex:1;background:#1e3a5f;color:#e0f0ff;border:none;border-radius:4px;padding:3px 6px;font-family:'Inter',sans-serif;font-size:.6rem;font-weight:700;cursor:pointer">Ninguno</button>
+              </div>
+              <div id="dash-barrio-list" style="overflow-y:auto;max-height:190px;padding:4px 0"></div>
+            </div>
+          </div>
+
+          <!-- DIRECCIÓN (constructor) -->
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <div style="font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#a0b4c8">DIRECCIÓN</div>
+            <div style="background:#0a1628;border:1px solid #1e3a5f;border-radius:6px;padding:6px 8px;min-width:340px">
+              <div style="display:flex;flex-wrap:wrap;gap:4px;align-items:center;margin-bottom:5px">
+                <select id="dSigla" onchange="buildDashDir()" style="background:#071020;color:#e0f0ff;border:1px solid #1e3a5f;border-radius:4px;padding:3px 5px;font-family:'Inter',sans-serif;font-size:.68rem;max-width:82px">
+                  <option value="">Sigla</option>
+                  <option>CL</option><option>CR</option><option>AV CL</option><option>AV CR</option><option>TV</option><option>DG</option>
+                </select>
+                <input type="text" id="dN1" placeholder="73" maxlength="5" oninput="buildDashDir()" style="background:#071020;color:#e0f0ff;border:1px solid #1e3a5f;border-radius:4px;padding:3px 5px;font-family:'Inter',sans-serif;font-size:.68rem;width:44px">
+                <input type="text" id="dL1" placeholder="A"  maxlength="3" oninput="buildDashDir()" style="background:#071020;color:#e0f0ff;border:1px solid #1e3a5f;border-radius:4px;padding:3px 5px;font-family:'Inter',sans-serif;font-size:.68rem;width:32px">
+                <span style="color:#4a7fa5;font-weight:800">#</span>
+                <input type="text" id="dN2" placeholder="65" maxlength="5" oninput="buildDashDir()" style="background:#071020;color:#e0f0ff;border:1px solid #1e3a5f;border-radius:4px;padding:3px 5px;font-family:'Inter',sans-serif;font-size:.68rem;width:44px">
+                <input type="text" id="dL2" placeholder="B"  maxlength="3" oninput="buildDashDir()" style="background:#071020;color:#e0f0ff;border:1px solid #1e3a5f;border-radius:4px;padding:3px 5px;font-family:'Inter',sans-serif;font-size:.68rem;width:32px">
+                <select id="dBis" onchange="buildDashDir()" style="background:#071020;color:#e0f0ff;border:1px solid #1e3a5f;border-radius:4px;padding:3px 5px;font-family:'Inter',sans-serif;font-size:.68rem;width:52px"><option value="">—</option><option>BIS</option></select>
+                <span style="color:#4a7fa5;font-weight:800">-</span>
+                <input type="text" id="dN3" placeholder="43" maxlength="5" oninput="buildDashDir()" style="background:#071020;color:#e0f0ff;border:1px solid #1e3a5f;border-radius:4px;padding:3px 5px;font-family:'Inter',sans-serif;font-size:.68rem;width:44px">
+              </div>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:6px">
+                <div id="dAbPrev" style="font-size:.68rem;color:#4a7fa5;font-style:italic;flex:1">Sin dirección</div>
+                <button onclick="clearDashDir()" style="background:transparent;border:1px solid #1e3a5f;color:#4a7fa5;padding:2px 7px;border-radius:4px;font-family:'Inter',sans-serif;font-size:.6rem;cursor:pointer;white-space:nowrap">✕ Limpiar</button>
+              </div>
+            </div>
+            <input type="hidden" id="dash-dir">
+          </div>
+
+          <!-- FECHA -->
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <div style="font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#a0b4c8">FECHA</div>
+            <div style="display:flex;align-items:center;gap:4px">
+              <input type="date" id="dash-desde-syc" onchange="renderDash()" style="background:#0a1628;color:#e0f0ff;border:1px solid #1e3a5f;border-radius:4px;padding:4px 6px;font-family:'Inter',sans-serif;font-size:.68rem">
+              <span style="color:#4a7fa5;font-size:.7rem">○</span>
+              <input type="date" id="dash-hasta-syc" onchange="renderDash()" style="background:#0a1628;color:#e0f0ff;border:1px solid #1e3a5f;border-radius:4px;padding:4px 6px;font-family:'Inter',sans-serif;font-size:.68rem">
+            </div>
+          </div>
+
+          <!-- TEMÁTICA (filtro rápido) -->
+          <div style="display:flex;flex-direction:column;gap:2px">
+            <div style="font-size:.55rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#a0b4c8">TEMÁTICA</div>
+            <select id="dash-tema-sel" onchange="setDashTema(this.value)" style="background:#0a1628;color:#e0f0ff;border:1px solid #1e3a5f;border-radius:4px;padding:4px 8px;font-family:'Inter',sans-serif;font-size:.72rem;min-width:150px">
+              <option value="">All</option>
+            </select>
+          </div>
+
+          <button onclick="resetDashFiltros()" style="margin-left:auto;background:transparent;border:1px solid #1e3a5f;color:#a0b4c8;padding:5px 10px;border-radius:4px;font-family:'Inter',sans-serif;font-size:.65rem;cursor:pointer;align-self:flex-end">✕ Limpiar filtros</button>
+        </div>
+
+        <!-- CONTENIDO PRINCIPAL -->
+        <div id="dashContent" style="flex:1;overflow-y:auto;padding:14px 16px;background:#0d1b2a"></div>
+      </div>
+    </div>
+  </div>
+    </div><!-- /main-content -->
+  </div><!-- /app-body -->
+</div><!-- /app -->
+
+<!-- SAVE BAR -->
+<div class="save-bar" id="saveBar" style="display:none">
+  <div class="inner">
+    <button class="btn btn-ghost" id="btnCancelEdit" style="display:none" onclick="resetForm(true)">Cancelar edición</button>
+    <button class="btn btn-pri" id="btnSave" onclick="saveRec()">💾 Guardar</button>
+  </div>
+</div>
+
+<!-- MODAL PIN -->
+<div class="ov" id="ovPin">
+  <div class="mdl">
+    <h3 id="pinTitle">Confirmar</h3>
+    <p id="pinMsg">Ingresa el PIN administrativo.</p>
+    <input type="password" id="pinInput" placeholder="PIN" style="text-align:center;font-size:1.1rem;letter-spacing:.3em" onkeydown="if(event.key==='Enter')confirmPin()">
+    <div class="bar" style="margin-top:16px;justify-content:flex-end">
+      <button class="btn btn-ghost btn-sm" onclick="closePin()">Cancelar</button>
+      <button class="btn btn-pri btn-sm" onclick="confirmPin()">Confirmar</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL DETALLE -->
+<div class="ov" id="ovDet">
+  <div class="mdl" style="max-width:560px;max-height:85vh;overflow:auto">
+    <div id="detBody"></div>
+    <div class="bar" style="margin-top:16px;justify-content:flex-end">
+      <button class="btn btn-danger btn-sm" id="detDel">🗑 Eliminar</button>
+      <button class="btn btn-ghost btn-sm" id="detEdit">✏️ Editar</button>
+      <button class="btn btn-ghost btn-sm" id="detPdf">📄 PDF</button>
+      <button class="btn btn-pri btn-sm" onclick="closeDet()">Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+/* ═══════════════════════════════════════════════════════════════
+   CONFIGURACIÓN FIREBASE — PEGA AQUÍ LA CONFIG DE TU NUEVO PROYECTO
+   (Consola Firebase → ⚙ Configuración del proyecto → Tus apps → Config)
+   Mientras esté con los valores TU_..., la app funciona en este
+   navegador con almacenamiento local (localStorage) para que puedas
+   probarla. Apenas pegues la config real, se conecta a Firebase.
+   ═══════════════════════════════════════════════════════════════ */
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyA2IRoa25LsWGfCVKJm4Hjs1dYKyeFKcJg",
+  authDomain: "aplicativo-syc.firebaseapp.com",
+  databaseURL: "https://aplicativo-syc-default-rtdb.firebaseio.com",
+  projectId: "aplicativo-syc",
+  storageBucket: "aplicativo-syc.firebasestorage.app",
+  messagingSenderId: "726396053190",
+  appId: "1:726396053190:web:a8f4e41a9bfebf193699c7"
+};
+const NODO = 'resultados_seguridad';   // nodo de la base de datos
+const ADMIN_PIN = '4433';              // PIN para editar / eliminar
+
+/* ───────── LISTAS ───────── */
+const RESPONSABLES = ["MARIA FERNANDA BORRERO RUEDA","JOSE LUIS VEGA","DANIEL FELIPE PERILLA MESA","JOHAN ALEXANDER RAMIREZ RINCON","MAXIMILIANO RINCON GARCIA","LIZETH DAYANA RUBIANO PULIDO","SANDRA JEANET AVILA ALVARADO","LADY DIANA PARRA GARCIA","CESAR AUGUSTO SOTO SOLENO","YAMILE COLORADO SALAZAR","ANDRES TORRES","HECTOR MANUEL PAIBA ARDILA","JAVIER JESUS CHAPARRO MARTINEZ","PAOLA ANDREA GONZALEZ HENAO","MATEO CORDOBA BEJARANO","GLORIA PATRICIA TORRES BARON","CAMILO ANDRÈS VARGAS VILLALOBOS","HELLEN YARITZA ESCOBAR GÓMEZ","KEVIN SANTIAGO BARRAGAN BARRETO","RODRIGO MANCERA","MARIA LUISA LOPEZ RIGUEROS","JORGE ALBERTO SANABRIA BARRETO","EDWARD HERRERA GALEANO","JOAN DAVID FERRER JIMENEZ","JULIO CESAR PEREZ AVILA","LUIS FERNANDO LOPEZ MARIN","JEIMMY SIERRA GODOY","LILIANA MILENA CAMARGO","SERGIO ANTONIO VILLEGAS ARISTIZABAL","JUAN FRANCISCO PEREZ BUITRAGO","NELSON MEDARDO ACOSTA VALLEJO","MARGARITA ESPERANZA ORTIZ GONZALEZ","ANA LUCINDA PIZA CABANZO","LUISA FERNANDA ROJAS GOMEZ","SANDRA MILENA POLOCHE GUZMAN","WILSON VERGARA","JENNY SOFIA CASTILLO URRUTIA","EDUARD ROMERO CRUZ","LUZ JHEIDY BARRERA MARTINEZ","JOHANNI ANDRES ZAPATA RESTREPO"];
+
+const UPZ_LIST = ["26 FERIAS","29 MINUTO DE DIOS","30 BOYACÁ REAL","31 SANTA CECILIA","72 BOLIVIA","73 GARCÉS NAVAS","74 ENGATIVÁ","105 JARDÍN BOTÁNICO","116 ÁLAMOS","00 VIRTUAL","00 FUERA DE LA LOCALIDAD"];
+
+const BARRIOS = {"26 FERIAS":["ACAPULCO","BELLAVISTA OCCIDENTAL","BONANZA","BOSQUE POPULAR","EL LAUREL","LA CABAÑA","LA ESTRADA","LA EUROPA","LA RELIQUIA","LAS FERIAS","LAS FERIAS OCCIDENTAL","PALO BLANCO","SAN JOAQUÍN","SANTA ROSA"],"29 MINUTO DE DIOS":["BOCHICA I","BOCHICA II","CIUDAD BACHUÉ I","CIUDAD BACHUÉ II","LA ESPAÑOLA","LA PALESTINA","LA SERENA","LAS CAROLINAS","LOS CEREZOS","LUIS CARLOS GALAN","MINUTO DE DIOS","MORISCO","PARÍS GAITÁN","PRIMAVERA","PRIMAVERA NORTE","QUIRIGUA","TISQUESUSA"],"30 BOYACÁ REAL":["BOYACÁ","EL REAL","FLORENCIA","FLORIDABLANCA I","FLORIDABLANCA II","LA ALMERIA","LA CLARITA","LA FLORIDA","LA GRANJA","LA SOLEDAD NORTE","LOS CAMPOS","LOS PINOS","MARATU","SAN JOSÉ NORTE","SANTA HELENITA","SANTA MARÍA DEL LAGO","SANTA ROSITA","TABORA","ZARZAMORA"],"31 SANTA CECILIA":["EL ENCANTO","EL LUJAN","EL REAL","LOS MONJES","NORMANDÍA","NORMANDÍA OCCIDENTAL","SAN IGNACIO","SAN MARCOS","SAN MARCOS I-II","SANTA CECILIA","TORRE CAMPO","VILLA LUZ"],"72 BOLIVIA":["BOCHICA COMPARTIR","BOCHICA III","BOLIVIA OCCIDENTAL","BOLIVIA ORIENTAL","CIUDADELA COLSUBSIDIO","EL CORTIJO"],"73 GARCÉS NAVAS":["ÁLAMOS NORTE","BOSQUES DE MARIANA","EL GACO","EL MORTIÑO","GARCÉS NAVAS","GRAN GRANADA","PLAZUELAS DEL VIRREY","SAN BASILIO","UNIR II","VILLA AMALIA","VILLAS DE ALCALÁ","VILLAS DE GRANADA","VILLAS DE MADRIGAL"],"74 ENGATIVÁ":["EL MUELLE","ENGATIVÁ CENTRO","GRANJAS DEL DORADO","LA CABAÑA","LA FAENA","LA RIVIERA","LAS MERCEDES","LAS PALMAS","LINTERAMA","LITUANIA","MARANDÚ","TORQUIGUA","VILLA DEL MAR","VILLA GLADYS","VILLA TERESITA","VILLAS DEL DORADO NORTE","VILLAS DEL DORADO SAN ANTONIO","VIÑA DEL MAR"],"105 JARDÍN BOTÁNICO":["ENTRE VERDES","JARDÍN BOTÁNICO","LUIS MARIA FERNÁNDEZ","SALITRE"],"116 ÁLAMOS":["ÁLAMOS","ÁLAMOS INDUSTRIAL","LOS ANGELES","SAN CAYETANO","SAN IGNACIO","TORRECAMPO"],"00 VIRTUAL":[],"00 FUERA DE LA LOCALIDAD":[]};
+
+const ACT = {
+  "SEGURIDAD":["PLAN BALIZA - REGISTRO Y CONTROL EN CALLE","PATRULLAJE MIXTO","PLAN GUITARRA","BICIRRECORRIDO","RECORRIDO SEGURIDAD","REGISTRO Y MARCACIÓN DE BICICLETAS","MEGATOMA"],
+  "CONVIVENCIA":["ACOMPAÑAMIENTO AGLOMERACIONES","JORNADAS DE ABORDAJE TERRITORIAL","JORNADAS ZONAS SEGURAS","TALLERES DE CONVIVENCIA","JORNADA DE SENSIBILIZACIÓN RESIDUOS SOLIDOS"],
+  "ENTORNOS ESCOLARES":["ACOMPAÑAMIENTO A ENTORNOS ESCOLARES","TALLER ENTORNOS ESCOLARES","RECORRIDO IDENTIFICACION FACTORES DE RIESGO","PLAN MOCHILAS DEL CUIDADO","JORNADAS DE APROPIACIÓN DE ENTORNOS ESCOLARES","TALLER DE PREVENCION DE VIOLENCIAS","PRIMEROS AUXILIOS CONVIVENCIA ESCOLAR"],
+  "DD.HH.":["ACOMPAÑAMIENTO A MANIFESTACIONES","JORNADA DE DD.HH.","SOCIALIZACION RUTAS DE ATENCION"],
+  "MESAS DE TRABAJO":["MESA DE CONTROL POLÍTICO","ENCUENTRO COMUNITARIO PONAL","MESA DE TRABAJO CON COLEGIOS","MESA TÉCNICA DE ENTORNOS ESCOLARES","CONSEJO LOCAL DE SEGURIDAD","COMITÉ CIVIL DE CONVIVENCIA LOCAL","JUNTA ZONAL DE SEGURIDAD","MESA DE TRABAJO - ARTICULACIÓN INTERINSTITUCIONAL","CONSEJO LOCAL DE JUSTICIA TRANSICIONAL","CONSEJO LOCAL DE PAZ","COMITÉ LOCAL DE DERECHOS HUMANOS","CONSEJO LOCAL DE SEGURIDAD PARA LAS MUJERES","CONSEJO LOCAL DE BARRAS","CONSEJO LOCAL DE MUJER Y EQUIDAD DE GÉNERO"]
+};
+const TEMA_RECORRIDO = ["MAL PARQUEO VEHICULAR","PREVENCIÓN AL HURTO (PERSONAS, COMERCIO, VEHICULOS Y RESIDENCIAS)","HABITABILIDAD EN CALLE - CARRETEROS","MANEJOS DE RESIDUOS","PREVENCIÓN AL CONSUMO DE SPA","RUTAS DE ATENCIÓN , ACCESO A LA JUSTICIA Y PROMOCIÓN A LA DENUNCIA","DECÁLOGO BUEN COMERCIANTE","PREVENCIÓN DE VIOLENCIAS - DELITOS SEXUALES","PREVENCIÓN A LA EXTORSIÓN","TENENCIA RESPONSABLE DE ANIMALES DE COMPAÑÍA"];
+const COLEGIOS = ["LICEO COMERCIAL DE LAS AMÉRICAS","COLEGIO REPÚBLICA DE COLOMBIA","COLEGIO NIDIA QUINTERO DE TURBAY","COLEGIO ESTRADA MARIA AUXILIADORA","COLEGIO REPUBLICA DE CHINA (IED) SEDE A","COLEGIO LICEO JUAN JOSE RONDON","INSTITUTO TECNICO INDUSTRIAL CENTRO DON BOSCO","COLEGIO INSTITUTO TECNICO INDUSTRIAL FRANCISCO JOSE DE CALDAS (IED) SEDE A","COLEGIO GUILLERMO LEON VALENCIA (IED)","COLEGIO CAMPESTRE LOS PINOS","COLEGIO NESTOR FORERO ALCALA (IED) SEDE A","COLEGIO NACIONES UNIDAS (IED) SEDE A","COLEGIO GENERAL SANTANDER (IED) SEDE A","COLEGIO CAFAM","COLEGIO RODOLFO LLINAS (IED) SEDE A","COLEGIO ELISA BORRERO DE PASTRANA","COLEGIO NUEVA CONSTITUCION","COLEGIO REPUBLICA DE CHINA SEDE A","COLEGIO MANUELA AYALA DE GAITAN SEDE B","COLEGIO GARCES NAVAS","COLEGIO COLSUBSIDIO","COLEGIO EL ESCORIAL","COLEGIO TOMAS CIPRIANO DE MOSQUERA","COLEGIO ANTONIO VILLAVICENCIO SEDE C","COLEGIO FRANCISCO JOSE DE CALDAS SEDE A","COLEGIO ROBERT F KENEDY","COLEGIO MIGUEL ANTONIO CARO","COLEGIO LUCILA RUBIO DE LA VERDE","COLEGIO SAN JOSÉ NORTE SEDE A","COLEGIO MANUELA AYALA DE GAITAN SEDE A","COLEGIO INSTITUTUTO TECNICO LAUREANO GOMEZ"];
+const ENTIDADES = ["POLICÍA NACIONAL","SECRETARIA DISTRITAL DE SEGURIDAD","SECRETARIA DISTRITAL DE GOBIERNO","ALE (AMBIENTE, DESARROLLO ECONÓMICO, PARTICIPACIÓN, CULTURA Y DEPORTE, ETC.)","SECRETARIA DISTRITAL DE INTEGRACIÓN SOCIAL","SECRETARIA DISTRITAL DE MOVILIDAD","SECRETARIA DISTRITAL DE EDUCACIÓN - DILE","SECRETARIA DISTRITAL DE SALUD","SECRETARIA DISTRITAL DE LA MUJER","SECRETARIA DISTRITAL DE AMBIENTE","UAESP","IDIPRON","ICBF","PERSONERÍA DISTRITAL - LOCAL","EJERCITO NACIONAL","ARMADA NACIONAL","FUERZA AEROESPACIAL COLOMBIANA","DADEP","RACE","GESTORES DE TRANSMILENIO","COMUNIDAD","SYC","N/A"];
+
+/* Indicadores agrupados por componente: [key, etiqueta] */
+const IND_GROUPS = [
+  {id:"c1", icon:"🛡️", title:"Control en calle · PONAL", items:[
+    ["requisasPersonas","Requisas a personas"],["requisasCiclistas","Requisas a ciclistas urbanos"],
+    ["antecedentes","Verificación de antecedentes"],["imei","Verificación IMEI"],
+    ["vehiculos","Registro a vehículos"],["motocicletas","Registro a motocicletas"],
+    ["carreteros","Registro a carreteros"],["chc","Registro a CHC"]]},
+  {id:"c2", icon:"🏚️", title:"Habitabilidad en calle", items:[
+    ["carretasReg","Carretas registradas"],["cambuchesReg","Cambuches registrados"],
+    ["carretasInc","Carretas incautadas"],["cambuchesDesm","Cambuches desmontados"],
+    ["residuoM3","Residuo voluminoso recolectado (m³)"]]},
+  {id:"c3", icon:"⚠️", title:"Incautaciones", items:[
+    ["armasBlancas","Armas blancas"],["armasFogueo","Armas de fuego / fogueo"],
+    ["armasTraumaticas","Armas traumáticas"],["dosisSPA","Dosis SPA (unidades)"]]},
+  {id:"c4", icon:"♻️", title:"Recuperaciones", items:[
+    ["biciRecuperadas","Bicicletas recuperadas"],["celularesRecuperados","Celulares recuperados"],
+    ["espacioM2","Espacio recuperado (m²)"]]},
+  {id:"c5", icon:"📣", title:"Comparendos y abordaje", items:[
+    ["comparendos","Órdenes de comparendo"],["personasAbordadas","Personas abordadas (sensibilizaciones)"],
+    ["riniasDisuadidas","Riñas disuadidas"],["cursosAbordados","Cursos abordados"],
+    ["busesSITP","Buses SITP abordados"],["ciclistasAbordados","Ciclistas urbanos abordados"]]},
+  {id:"c6", icon:"🚲", title:"Registro Mi Bici", items:[
+    ["biciVerificadas","Bicicletas verificadas"],["biciMarcadas","Bicicletas marcadas"],
+    ["registroMiBici","Inscripción Registro Mi Bici"]]}
+];
+const IND_KEYS = IND_GROUPS.flatMap(g=>g.items.map(i=>i[0]));
+const IND_LABEL = {}; IND_GROUPS.forEach(g=>g.items.forEach(i=>IND_LABEL[i[0]]=i[1]));
+
+/* ═══════════ STORE (Firebase o localStorage) ═══════════ */
+let usingFirebase = false, db = null, ref = null;
+const LS_KEY = 'seguridad_'+NODO;
+const Store = {
+  list:[], map:{}, _cb:null,
+  init(cb){
+    this._cb = cb;
+    const cfgOk = FIREBASE_CONFIG.apiKey && !FIREBASE_CONFIG.apiKey.startsWith('TU_') && FIREBASE_CONFIG.databaseURL && !FIREBASE_CONFIG.databaseURL.includes('TU_PROYECTO');
+    if(cfgOk){
+      try{
+        firebase.initializeApp(FIREBASE_CONFIG);
+        db = firebase.database(); ref = db.ref(NODO); usingFirebase = true;
+        setStatus('🟢 Firebase');
+        ref.on('value', snap=>{
+          Store.list=[]; Store.map={};
+          if(snap.exists()) snap.forEach(ch=>{ const r=ch.val(); r._k=ch.key; Store.map[ch.key]=r; Store.list.push(r); });
+          Store.list.sort((a,b)=>{ const fa=(a.meta&&a.meta.fecha)||''; const fb=(b.meta&&b.meta.fecha)||''; return fb.localeCompare(fa); });
+          cb();
+        }, err=>{ setStatus('🔴 Error Firebase'); console.error(err); });
+        return;
+      }catch(e){ console.error(e); }
+    }
+    // fallback local
+    usingFirebase = false; setStatus('💾 Local (sin Firebase)');
+    document.getElementById('cfgBanner').classList.remove('hide');
+    document.getElementById('cfgBanner').textContent = '⚠️ Firebase no configurado: estás usando almacenamiento local de prueba. Pega la config de tu proyecto en FIREBASE_CONFIG.';
+    this._loadLocal(); cb();
+  },
+  _loadLocal(){
+    this.list=[]; this.map={};
+    try{
+      const raw = JSON.parse(localStorage.getItem(LS_KEY)||'{}');
+      Object.keys(raw).forEach(k=>{ const r=raw[k]; r._k=k; this.map[k]=r; });
+      this.list = Object.values(this.map).sort((a,b)=>{ const fa=(a.meta&&a.meta.fecha)||''; const fb=(b.meta&&b.meta.fecha)||''; return fb.localeCompare(fa); });
+    }catch(e){}
+  },
+  _saveLocal(){
+    const obj={}; Object.keys(this.map).forEach(k=>{ const c=Object.assign({},this.map[k]); delete c._k; obj[k]=c; });
+    localStorage.setItem(LS_KEY, JSON.stringify(obj));
+  },
+  push(rec){
+    if(usingFirebase){ return ref.push(rec); }
+    const k='loc_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+    rec._k=k; this.map[k]=rec; this._saveLocal(); this._loadLocal(); this._cb(); return Promise.resolve();
+  },
+  update(key,rec){
+    if(usingFirebase){ return ref.child(key).set(rec); }
+    rec._k=key; this.map[key]=rec; this._saveLocal(); this._loadLocal(); this._cb(); return Promise.resolve();
+  },
+  remove(key){
+    if(usingFirebase){ return ref.child(key).remove(); }
+    delete this.map[key]; this._saveLocal(); this._loadLocal(); this._cb(); return Promise.resolve();
+  }
+};
+function setStatus(t){ const e=document.getElementById('fbStatus'); if(e) e.textContent=t; }
+
+/* ═══════════ ESTADO FORM ═══════════ */
+const SECS = ['s1','s2','s3','s4','s5','s6'];
+const SEC_NAMES = {s1:'Identificación',s2:'Ubicación',s3:'Actividad',s4:'Desarrollo',s5:'Indicadores',s6:'Entidades'};
+let curSec='s1';
+let editKey=null;
+let selEnt=new Set();
+
+/* ═══════════ INIT UI ═══════════ */
+function $(id){return document.getElementById(id);}
+function fillSelect(el,arr,first){ el.innerHTML=(first!==undefined?`<option value="">${first}</option>`:'')+arr.map(v=>`<option>${v}</option>`).join(''); }
+function fillDatalist(el,arr){ el.innerHTML=arr.map(v=>`<option value="${v.replace(/"/g,'&quot;')}">`).join(''); }
+
+function buildUI(){
+  // selects
+  fillSelect($('upz'),UPZ_LIST,'—');
+  fillSelect($('tematicaRecorrido'),TEMA_RECORRIDO,'—');
+  fillSelect($('fTema'),Object.keys(ACT).concat(['OTRO']),'Todas');
+  fillSelect($('fUpz'),UPZ_LIST,'Todas');
+  fillDatalist($('dlResp'),RESPONSABLES);
+  fillDatalist($('dlColegios'),COLEGIOS);
+  // entidades chips
+  initEntDrop();
+  // indicadores
+  $('indContainer').innerHTML = IND_GROUPS.map(g=>`
+    <div class="card" id="indgrp-${g.id}">
+      <div class="ch" style="background:var(--${g.id}bg);color:var(--${g.id})">${g.icon} ${g.title}</div>
+      <div class="ind-grid ind">
+        ${g.items.map(it=>`<div class="f"><label>${it[1]}</label><input type="number" min="0" id="${it[0]}" value="0"></div>`).join('')}
+      </div>
+    </div>`).join('');
+  $('fecha').value = new Date().toISOString().split('T')[0];
+}
+
+/* ═══════════ NAVEGACIÓN ═══════════ */
+function showView(v){
+  document.querySelectorAll('.mview').forEach(m=>m.classList.remove('on'));
+  document.querySelectorAll('.nav-item').forEach(t=>t.classList.remove('on'));
+  $('mview-'+v).classList.add('on');
+  const ni=document.querySelector(`.nav-item[data-view="${v}"]`);
+  if(ni) ni.classList.add('on');
+  $('saveBar').style.display = (v==='form')?'flex':'none';
+  if(v==='dash') renderDash();
+  window.scrollTo(0,0);
+}
+function scrollToSec(s){ const e=$(s); if(e) e.scrollIntoView({behavior:'smooth',block:'start'}); }
+
+/* ═══════════ YN ═══════════ */
+function setYN(group,v){
+  if(group==='prox'){ $('proximidad').value=v; setYNbtns('ynProx',v); }
+  if(group==='cancel'){ $('cancelada').value=v; setYNbtns('ynCancel',v); }
+  updateConds();
+}
+function setYNbtns(wrap,v){
+  document.querySelectorAll(`#${wrap} .yn-btn`).forEach(b=>{
+    b.classList.remove('y','n');
+    if(b.dataset.v===v) b.classList.add(v==='SI'?'y':'n');
+  });
+}
+
+/* ═══════════ DIRECCIÓN ═══════════ */
+let dirManual=false;
+function composeDir(){
+  dirManual=false;
+  const via=$('abVia').value, n1=$('abN1').value.trim(), l1=$('abL1').value.trim().toUpperCase(),
+        n2=$('abN2').value.trim(), l2=$('abL2').value.trim().toUpperCase(), n3=$('abN3').value.trim();
+  if(!via && !n1 && !n2 && !n3){ return; }
+  let s = (via?via+' ':'') + n1 + (l1?l1:'');
+  if(n2||l2||n3) s += ' # ' + n2 + (l2?l2:'') + (n3?' – '+n3:'');
+  $('dir').value = s.trim();
+}
+function markDirManual(){ dirManual=true; }
+
+/* ═══════════ UPZ / BARRIO ═══════════ */
+function onUpzChange(){
+  const upz=$('upz').value;
+  const sel=$('barrio'); const arr=BARRIOS[upz]||[];
+  sel.innerHTML='<option value="">—</option>'+arr.map(b=>`<option>${b}</option>`).join('')+'<option value="OTRO">OTRO…</option>';
+  updateConds();
+}
+
+/* ═══════════ TEMÁTICA / ACTIVIDAD ═══════════ */
+function onTemaChange(){
+  const t=$('tematica').value;
+  const sel=$('actividadSel');
+  if(ACT[t]){ sel.innerHTML='<option value="">—</option>'+ACT[t].map(a=>`<option>${a}</option>`).join(''); }
+  else sel.innerHTML='<option value="">—</option>';
+  updateConds();
+}
+
+/* ═══════════ CONDICIONALES ═══════════ */
+function show(id,on){ $(id).classList.toggle('on',!!on); }
+function updateConds(){
+  // entorno
+  const prox=$('proximidad').value;
+  show('condEntorno', prox==='SI');
+  const te=$('tipoEntorno').value;
+  show('condColegio', prox==='SI' && te==='ENTORNOS ESCOLARES');
+  show('condParque', prox==='SI' && te==='PARQUES');
+  // barrio otro
+  show('condBarrioOtro', $('barrio').value==='OTRO');
+  // tema/actividad
+  const t=$('tematica').value;
+  show('condActSel', t && t!=='OTRO');
+  show('condActOtro', t==='OTRO');
+  const a = (t==='OTRO') ? $('actividadOtro').value : $('actividadSel').value;
+  const au=(a||'').toUpperCase();
+  show('condCLP', au.includes('CONTROL POLÍTICO') || au.includes('CONTROL POLITICO'));
+  show('condRecorrido', au.includes('ABORDAJE') || au.includes('RECORRIDOS DE ABORDAJE'));
+  show('condZonaSegura', au.includes('ZONA') && au.includes('SEGURA'));
+  show('condTallerEE', au.includes('TALLER') && t==='ENTORNOS ESCOLARES');
+  show('condTallerConv', au.includes('TALLER') && t==='CONVIVENCIA');
+  // cancelada
+  show('condRazon', $('cancelada').value==='SI');
+  updateIndVisibility();
+}
+
+/* ═══════════ FILTRADO DE INDICADORES POR TEMÁTICA / ACTIVIDAD ═══════════ */
+function visibleGroups(){
+  const t=$('tematica').value;
+  if(!t) return null;                       // nada seleccionado
+  if(t==='MESAS DE TRABAJO') return [];     // las mesas no registran indicadores operativos
+  const a=((t==='OTRO')?$('actividadOtro').value:$('actividadSel').value)||'';
+  const A=a.toUpperCase();
+  if(t==='OTRO') return ['c1','c2','c3','c4','c5','c6'];
+  if(t==='SEGURIDAD'){
+    if(A.includes('MEGATOMA')) return ['c1','c2','c3','c4','c5','c6'];
+    if(A.includes('MARCACI')) return ['c6'];
+    if(A.includes('BICIRRECORRIDO')) return ['c1','c4','c6'];
+    return ['c1','c3','c5'];                 // plan baliza, patrullaje, plan guitarra, recorrido seguridad
+  }
+  if(t==='CONVIVENCIA'){
+    if(A.includes('ABORDAJE')) return ['c2','c4','c5'];
+    if(A.includes('RESIDUOS')) return ['c4'];
+    return ['c5'];                           // aglomeraciones, zonas seguras, talleres
+  }
+  if(t==='ENTORNOS ESCOLARES') return ['c5'];
+  if(t==='DD.HH.') return ['c5'];
+  return ['c5'];
+}
+function updateIndVisibility(){
+  const groups=visibleGroups();
+  const s5=$('s5'), hint=$('indHint'), otros=$('otrosCard');
+  if(groups===null){
+    s5.style.display='block'; hint.style.display='block';
+    hint.textContent='Selecciona una temática y una actividad para ver los indicadores relacionados.';
+    IND_GROUPS.forEach(g=>{const c=$('indgrp-'+g.id); if(c)c.style.display='none';});
+    if(otros) otros.style.display='none';
+    return;
+  }
+  if(groups.length===0){ s5.style.display='none'; return; }
+  s5.style.display='block'; hint.style.display='none';
+  if(otros) otros.style.display='block';
+  IND_GROUPS.forEach(g=>{
+    const c=$('indgrp-'+g.id); if(!c)return;
+    const on=groups.includes(g.id);
+    c.style.display=on?'block':'none';
+    if(!on) g.items.forEach(it=>{const e=$(it[0]); if(e)e.value=0;});  // limpia los que se ocultan
+  });
+}
+
+/* ═══════════ ENTIDADES ═══════════ */
+function initEntDrop(){
+  const list=$('entDropList'); if(!list)return;
+  list.innerHTML=ENTIDADES.map(e=>{
+    const on=selEnt.has(e);
+    return `<div class="ent-opt${on?' on':''}" data-ent="${e.replace(/"/g,'&quot;')}" onclick="toggleEntOpt(this)"><div class="chk">${on?'✓':''}</div><span>${e}</span></div>`;
+  }).join('');
+  updateEntLabel();
+}
+function toggleEntDrop(){
+  const p=$('entDropPanel');
+  p.style.display=(p.style.display==='none')?'block':'none';
+}
+function toggleEntOpt(el){
+  const v=el.dataset.ent;
+  if(selEnt.has(v)){ selEnt.delete(v); el.classList.remove('on'); el.querySelector('.chk').textContent=''; }
+  else { selEnt.add(v); el.classList.add('on'); el.querySelector('.chk').textContent='✓'; }
+  updateEntLabel(); updateEntTags();
+}
+function updateEntLabel(){
+  const lbl=$('entDropLabel'); if(!lbl)return;
+  const arr=Array.from(selEnt);
+  if(arr.length===0){ lbl.textContent='Ninguna seleccionada'; lbl.style.color='#94a3b8'; }
+  else { lbl.textContent=arr.length+' seleccionada'+(arr.length>1?'s':''); lbl.style.color='var(--text)'; }
+}
+function updateEntTags(){
+  const box=$('entTags'); if(!box)return;
+  box.innerHTML=Array.from(selEnt).map(e=>`<span class="ent-tag">${e}<button onclick="removeEnt(this.parentElement.textContent.slice(0,-1))">×</button></span>`).join('');
+}
+function removeEnt(v){
+  selEnt.delete(v);
+  const opt=document.querySelector(`#entDropList .ent-opt[data-ent="${v.replace(/"/g,'&quot;')}"]`);
+  if(opt){ opt.classList.remove('on'); opt.querySelector('.chk').textContent=''; }
+  updateEntLabel(); updateEntTags();
+}
+document.addEventListener('click',function(e){
+  const panel=$('entDropPanel'),btn=$('entDropBtn');
+  if(panel&&btn&&!panel.contains(e.target)&&!btn.contains(e.target)) panel.style.display='none';
+});
+
+function addEntOtra(){
+  const v=$('entOtra').value.trim(); if(!v) return;
+  if(!selEnt.has(v)){ selEnt.add(v); updateEntLabel(); updateEntTags(); }
+  $('entOtra').value='';
+}
+
+/* ═══════════ RECOLECTAR / VALIDAR ═══════════ */
+function reqVisible(){
+  // campos requeridos según estado actual
+  const r=[
+    {id:'responsable',sec:'s1',lbl:'Responsable'},
+    {id:'fecha',sec:'s1',lbl:'Fecha'},
+    {id:'lugar',sec:'s2',lbl:'Lugar'},
+    {id:'modalidad',sec:'s2',lbl:'Modalidad'},
+    {id:'upz',sec:'s2',lbl:'UPZ'},
+    {id:'barrio',sec:'s2',lbl:'Barrio'},
+    {id:'tematica',sec:'s3',lbl:'Temática'},
+  ];
+  if($('barrio').value==='OTRO') r.push({id:'barrioOtro',sec:'s2',lbl:'Nombre del barrio (otro)'});
+  const t=$('tematica').value;
+  if(t==='OTRO') r.push({id:'actividadOtro',sec:'s3',lbl:'Actividad (describir)'});
+  else if(t) r.push({id:'actividadSel',sec:'s3',lbl:'Actividad'});
+  return r;
+}
+function validate(){
+  document.querySelectorAll('.inv').forEach(e=>e.classList.remove('inv'));
+  const miss=[];
+  reqVisible().forEach(f=>{ const el=$(f.id); const v=(el.value||'').trim(); if(!v){ miss.push(f); el.classList.add('inv'); } });
+  return miss;
+}
+
+function collect(){
+  const t=$('tematica').value;
+  const actividad = (t==='OTRO') ? $('actividadOtro').value.trim() : $('actividadSel').value;
+  const meta={
+    responsable:$('responsable').value.trim(), fecha:$('fecha').value,
+    horaInicio:$('horaInicio').value, horaFin:$('horaFin').value,
+    lugar:$('lugar').value.trim(), direccion:$('dir').value.trim(),
+    modalidad:$('modalidad').value,
+    proximidad:$('proximidad').value||'NO', tipoEntorno:$('tipoEntorno').value,
+    entornoEscolar:$('entornoEscolar').value.trim(), nombreParque:$('nombreParque').value.trim(),
+    upz:$('upz').value, barrio:$('barrio').value==='OTRO'?$('barrioOtro').value.trim().toUpperCase():$('barrio').value,
+    barrioRaw:$('barrio').value,
+    tematica:t, actividad:actividad,
+    numeroCLP:$('numeroCLP').value, tematicaRecorrido:$('tematicaRecorrido').value,
+    tipoJornadaZS:$('tipoJornadaZS').value, tematicaTallerEE:$('tematicaTallerEE').value.trim(), tematicaTallerConv:$('tematicaTallerConv').value.trim(),
+    desarrollo:$('desarrollo').value.trim(), observaciones:$('observaciones').value.trim(), compromisos:$('compromisos').value.trim(),
+    entidades:Array.from(selEnt),
+    linkActa:$('linkActa')?$('linkActa').value.trim():'',
+    creado: editKey&&Store.map[editKey]?(Store.map[editKey].meta.creado||Date.now()):Date.now(),
+    actualizado: Date.now()
+  };
+  const ind={};
+  IND_KEYS.forEach(k=>{ ind[k]=Number($(k).value)||0; });
+  ind.otrosResultados=$('otrosResultados').value.trim();
+  return {meta,ind};
+}
+
+function saveRec(){
+  const miss=validate();
+  if(miss.length>0){
+    const first=$(miss[0].id);
+    if(first){ first.scrollIntoView({behavior:'smooth',block:'center'}); setTimeout(()=>first.focus(),300); }
+    toast('Faltan '+miss.length+' campo(s) obligatorio(s)','err');
+    return;
+  }
+  const rec=collect();
+  const p = editKey ? Store.update(editKey,rec) : Store.push(rec);
+  p.then(()=>{
+    toast(editKey?'Actividad actualizada':'Actividad guardada','ok');
+    resetForm(false); showView('recs');
+  }).catch(e=>{ console.error(e); toast('Error al guardar','err'); });
+}
+
+function resetForm(toRecs){
+  editKey=null; selEnt.clear(); dirManual=false;
+  ['responsable','lugar','dir','abN1','abL1','abN2','abL2','abN3','entornoEscolar','nombreParque','barrioOtro','actividadOtro','numeroCLP','tematicaTallerEE','tematicaTallerConv','desarrollo','observaciones','compromisos','otrosResultados','entOtra','linkActa'].forEach(id=>{const e=$(id); if(e)e.value='';});
+  ['modalidad','upz','barrio','tipoEntorno','tematica','actividadSel','tematicaRecorrido','tipoJornadaZS','horaInicio','horaFin'].forEach(id=>{const e=$(id); if(e)e.value='';});
+  $('fecha').value=new Date().toISOString().split('T')[0];
+  $('proximidad').value='';
+  setYNbtns('ynProx','');
+  IND_KEYS.forEach(k=>$(k).value=0);
+  initEntDrop(); updateEntTags();
+  $('btnSave').textContent='💾 Guardar'; $('btnCancelEdit').style.display='none';
+  onTemaChange(); updateConds(); window.scrollTo(0,0);
+  if(toRecs) showView('recs');
+}
+
+/* ═══════════ RENDER RESULTADOS ═══════════ */
+function temaBadgeClass(t){
+  if(t==='SEGURIDAD')return 't-SEGURIDAD'; if(t==='CONVIVENCIA')return 't-CONVIVENCIA';
+  if(t==='ENTORNOS ESCOLARES')return 't-ENTORNOS'; if(t==='MESAS DE TRABAJO')return 't-MESAS';
+  if(t==='DD.HH.')return 't-DDHH'; return '';
+}
+function fmtDate(d){ if(!d)return''; const p=d.split('-'); return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:d; }
+function applyFilters(list){
+  const txt=$('fTxt').value.toLowerCase().trim(), tema=$('fTema').value, upz=$('fUpz').value;
+  const desde=$('fDesde').value, hasta=$('fHasta').value;
+  return list.filter(r=>{
+    const m=r.meta||{};
+    if(tema && m.tematica!==tema) return false;
+    if(upz && m.upz!==upz) return false;
+    if(desde && (m.fecha||'')<desde) return false;
+    if(hasta && (m.fecha||'')>hasta) return false;
+    if(txt){
+      const blob=[m.lugar,m.direccion,m.responsable,m.actividad,m.barrio,m.upz].join(' ').toLowerCase();
+      if(!blob.includes(txt)) return false;
+    }
+    return true;
+  });
+}
+function renderRecs(){
+  const list=applyFilters(Store.list);
+  $('recCount').textContent=list.length;
+  if($('sideCount')) $('sideCount').textContent=Store.list.length;
+  // Stats bar
+  const allList=Store.list;
+  if(allList.length>0){
+    const conActa=allList.filter(r=>r.meta&&r.meta.linkActa&&r.meta.linkActa.trim()).length;
+    const sinActa=allList.length-conActa;
+    const pct=Math.round(conActa/allList.length*100);
+    $('statConActa').textContent=conActa;
+    $('statSinActa').textContent=sinActa;
+    $('statPct').textContent=pct+'%';
+    $('statsBar').style.display='grid';
+  } else {
+    $('statsBar').style.display='none';
+  }
+  const box=$('recsList');
+  if(list.length===0){
+    box.innerHTML=`<div class="empty"><div class="ico">📭</div>${Store.list.length===0?'Aún no hay actividades registradas.':'Sin resultados con esos filtros.'}</div>`;
+    return;
+  }
+  box.innerHTML=list.map((r,idx)=>{
+    const m=r.meta||{};
+    const ind=r.ind||{}; const total=IND_KEYS.reduce((s,k)=>s+(Number(ind[k])||0),0);
+    const acta=m.linkActa&&m.linkActa.trim();
+    const actaBadge=acta
+      ? `<a class="rec-acta" href="${acta}" target="_blank" onclick="event.stopPropagation()">🔗 Ver acta</a>`
+      : `<span class="rec-sin-acta">⚠️ Sin acta</span>`;
+    return `<div class="rec" onclick="openDet('${r._k}')">
+      <div class="rec-num">${list.length - idx}</div>
+      <div class="rec-body">
+        <div class="rec-top">
+          <div style="flex:1">
+            <div class="rec-tit">${m.tematica||'(sin temática)'} · ${m.actividad||'(sin actividad)'}</div>
+            <div class="rec-meta">📅 ${fmtDate(m.fecha)} ${m.horaInicio?'· '+m.horaInicio:''}${m.horaFin?' → '+m.horaFin:''} · 👤 ${m.responsable||'—'}<br>📍 ${m.lugar||''}${m.barrio?' · '+m.barrio:''}</div>
+          </div>
+        </div>
+        <div class="rec-badges">
+          <span class="bdg ${temaBadgeClass(m.tematica)}">${m.tematica||'—'}</span>
+          <span class="bdg">${m.modalidad||''}</span>
+          ${total>0?`<span class="bdg">${total} ind.</span>`:''}
+          ${actaBadge}
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+function toggleFil(){ $('filPanel').classList.toggle('on'); }
+function clearFil(){ ['fTxt','fTema','fUpz','fDesde','fHasta'].forEach(id=>$(id).value=''); renderRecs(); }
+
+/* ═══════════ DETALLE / EDITAR / ELIMINAR ═══════════ */
+let detKey=null;
+function openDet(k){
+  detKey=k; const r=Store.map[k]; if(!r)return; const m=r.meta||{}, ind=r.ind||{};
+  const indRows=IND_GROUPS.map(g=>{
+    const rows=g.items.filter(it=>(Number(ind[it[0]])||0)>0);
+    if(rows.length===0)return'';
+    return `<div style="font-weight:700;font-size:.72rem;color:var(--${g.id});margin:8px 0 3px">${g.icon} ${g.title}</div>`+
+      rows.map(it=>`<div style="font-size:.8rem;display:flex;justify-content:space-between"><span>${it[1]}</span><b>${ind[it[0]]}</b></div>`).join('');
+  }).join('');
+  $('detBody').innerHTML=`
+    <h3>${m.actividad||'(sin actividad)'}</h3>
+    <p style="margin-bottom:10px">${m.tematica||''} · ${m.modalidad||''} ${m.cancelada==='SI'?'· <b style="color:#991b1b">CANCELADA</b>':''}</p>
+    <div style="font-size:.82rem;line-height:1.7">
+      <div>📅 <b>${fmtDate(m.fecha)}</b> ${m.horaInicio||''}${m.horaFin?' – '+m.horaFin:''}</div>
+      <div>👤 ${m.responsable||'—'}</div>
+      <div>📍 ${m.lugar||''}${m.direccion?' · '+m.direccion:''}</div>
+      <div>🏘️ ${m.barrio||''} · UPZ ${m.upz||''}</div>
+      ${m.proximidad==='SI'?`<div>🎯 ${m.tipoEntorno||''} ${m.entornoEscolar||m.nombreParque||''}</div>`:''}
+      ${m.entidades&&m.entidades.length?`<div>🤝 ${m.entidades.join(', ')}</div>`:''}
+      ${m.linkActa?`<div>🔗 <a href="${m.linkActa}" target="_blank" style="color:var(--primary);font-weight:700">Ver acta cargada</a></div>`:''}
+    </div>
+    ${m.desarrollo?`<div style="margin-top:10px"><label>Desarrollo</label><div style="font-size:.8rem;white-space:pre-wrap;margin-top:3px">${m.desarrollo}</div></div>`:''}
+    ${m.observaciones?`<div style="margin-top:8px"><label>Observaciones</label><div style="font-size:.8rem;white-space:pre-wrap;margin-top:3px">${m.observaciones}</div></div>`:''}
+    ${m.compromisos?`<div style="margin-top:8px"><label>Compromisos</label><div style="font-size:.8rem;white-space:pre-wrap;margin-top:3px">${m.compromisos}</div></div>`:''}
+
+    ${indRows?`<div style="margin-top:10px"><label>Indicadores</label>${indRows}</div>`:''}
+    ${ind.otrosResultados&&ind.otrosResultados!=='0'?`<div style="margin-top:8px"><label>Otros resultados</label><div style="font-size:.8rem">${ind.otrosResultados}</div></div>`:''}
+  `;
+  $('detEdit').onclick=()=>{ closeDet(); loadForEdit(k); };
+  $('detDel').onclick=()=>{ askPin('Eliminar actividad','Esta acción no se puede deshacer. Ingresa el PIN.',()=>{ Store.remove(k).then(()=>{ closeDet(); toast('Actividad eliminada','ok'); }); }); };
+  $('detPdf').onclick=()=>genActaPdf(r);
+  $('ovDet').classList.add('on');
+}
+function closeDet(){ $('ovDet').classList.remove('on'); }
+
+function loadForEdit(k){
+  const r=Store.map[k]; if(!r)return; const m=r.meta||{}, ind=r.ind||{};
+  editKey=k;
+  $('responsable').value=m.responsable||''; $('fecha').value=m.fecha||''; $('horaInicio').value=m.horaInicio||''; $('horaFin').value=m.horaFin||'';
+  $('lugar').value=m.lugar||''; $('dir').value=m.direccion||''; $('modalidad').value=m.modalidad||'';
+  $('upz').value=m.upz||''; onUpzChange();
+  if(m.barrioRaw==='OTRO'||(!BARRIOS[m.upz]||!BARRIOS[m.upz].includes(m.barrio))){ $('barrio').value='OTRO'; $('barrioOtro').value=m.barrio||''; }
+  else $('barrio').value=m.barrio||'';
+  $('proximidad').value=m.proximidad||''; setYNbtns('ynProx',m.proximidad);
+  $('tipoEntorno').value=m.tipoEntorno||''; $('entornoEscolar').value=m.entornoEscolar||''; $('nombreParque').value=m.nombreParque||'';
+  $('tematica').value=m.tematica||''; onTemaChange();
+  if(m.tematica==='OTRO'){
+    const selO=$('actividadOtro');
+    if(m.actividad && ![...selO.options].some(o=>o.value===m.actividad)){ const op=document.createElement('option'); op.value=m.actividad; op.textContent=m.actividad; selO.appendChild(op); }
+    selO.value=m.actividad||'';
+  } else $('actividadSel').value=m.actividad||'';
+  $('numeroCLP').value=m.numeroCLP||''; $('tematicaRecorrido').value=m.tematicaRecorrido||''; $('tipoJornadaZS').value=m.tipoJornadaZS||'';
+  $('tematicaTallerEE').value=m.tematicaTallerEE||''; $('tematicaTallerConv').value=m.tematicaTallerConv||'';
+  $('desarrollo').value=m.desarrollo||''; $('observaciones').value=m.observaciones||''; $('compromisos').value=m.compromisos||'';
+  if($('linkActa')) $('linkActa').value=m.linkActa||'';
+  IND_KEYS.forEach(kk=>$(kk).value=Number(ind[kk])||0); $('otrosResultados').value=ind.otrosResultados||'';
+  // entidades
+  selEnt=new Set(m.entidades||[]);
+  initEntDrop(); updateEntTags();
+  updateConds();
+  $('btnSave').textContent='💾 Actualizar'; $('btnCancelEdit').style.display='inline-flex';
+  showView('form'); window.scrollTo(0,0); toast('Editando actividad','ok');
+}
+
+/* ═══════════ PIN ═══════════ */
+let pinCb=null;
+function askPin(title,msg,cb){ pinCb=cb; $('pinTitle').textContent=title; $('pinMsg').textContent=msg; $('pinInput').value=''; $('ovPin').classList.add('on'); setTimeout(()=>$('pinInput').focus(),100); }
+function closePin(){ $('ovPin').classList.remove('on'); pinCb=null; }
+function confirmPin(){ if($('pinInput').value===ADMIN_PIN){ const cb=pinCb; closePin(); if(cb)cb(); } else toast('PIN incorrecto','err'); }
+
+/* ═══════════ TOAST ═══════════ */
+let toastT=null;
+function toast(msg,type){ const t=$('toast'); t.textContent=msg; t.className='on '+(type||''); clearTimeout(toastT); toastT=setTimeout(()=>t.className='',2600); }
+
+/* ═══════════ RESUMEN / DASHBOARD ═══════════ */
+/* ═══════════ DASHBOARD PBI STYLE ═══════════ */
+let dashTema = '';
+const DASH_COLORS = ['#3b82f6','#f59e0b','#10b981','#ef4444','#8b5cf6','#06b6d4','#f97316','#84cc16','#ec4899','#a78bfa'];
+const UPZ_BAR_COLORS = ['#ef4444','#f97316','#f59e0b','#14b8a6','#3b82f6','#1e40af','#84cc16','#6366f1','#a855f7'];
+
+let _dashBarriosSel = new Set();
+
+function getDashRecs(){
+  const upzF   = $('dash-upz-syc')?.value||'';
+  const desde  = $('dash-desde-syc')?.value||'';
+  const hasta  = $('dash-hasta-syc')?.value||'';
+  const dirF   = ($('dash-dir')?.value||'').toLowerCase().trim();
+  return Store.list.filter(r=>{
+    const m=r.meta||{};
+    if(dashTema && m.tematica!==dashTema) return false;
+    if(upzF && m.upz!==upzF) return false;
+    if(_dashBarriosSel.size>0 && !_dashBarriosSel.has(m.barrio||'')) return false;
+    if(dirF && !(m.direccion||'').toLowerCase().includes(dirF)) return false;
+    if(desde && m.fecha<desde) return false;
+    if(hasta && m.fecha>hasta) return false;
+    return true;
+  });
+}
+
+function buildDashDir(){
+  const s=$('dSigla')?.value||'', n1=$('dN1')?.value.trim()||'';
+  const l1=$('dL1')?.value.trim()||'', n2=$('dN2')?.value.trim()||'';
+  const l2=$('dL2')?.value.trim()||'', bis=$('dBis')?.value||'';
+  const n3=$('dN3')?.value.trim()||'';
+  const prev=$('dAbPrev'), hidden=$('dash-dir');
+  if(!s&&!n1&&!n2&&!n3){ if(prev)prev.textContent='Sin dirección'; if(hidden)hidden.value=''; renderDash(); return; }
+  let addr=`${s} ${n1}${l1}`;
+  if(n2) addr+=` # ${n2}${l2}`;
+  if(bis) addr+=` ${bis}`;
+  if(n3) addr+=` - ${n3}`;
+  addr=addr.trim();
+  if(prev) prev.textContent=addr;
+  if(hidden) hidden.value=addr;
+  renderDash();
+}
+
+function clearDashDir(){
+  ['dSigla','dN1','dL1','dN2','dL2','dBis','dN3'].forEach(id=>{const e=$(id);if(e)e.value='';});
+  const prev=$('dAbPrev'), hidden=$('dash-dir');
+  if(prev) prev.textContent='Sin dirección';
+  if(hidden) hidden.value='';
+  renderDash();
+}
+
+function populateDashBarrioFilter(){
+  const upzF=$('dash-upz-syc')?.value||'';
+  const list=$('dash-barrio-list'); if(!list)return;
+  const barrios=[...new Set(Store.list.filter(r=>!upzF||(r.meta?.upz===upzF)).map(r=>r.meta?.barrio||'').filter(Boolean))].sort();
+  const valid=new Set(barrios);
+  _dashBarriosSel.forEach(b=>{if(!valid.has(b))_dashBarriosSel.delete(b);});
+  list.innerHTML=barrios.map(b=>{
+    const chk=_dashBarriosSel.size===0||_dashBarriosSel.has(b);
+    return `<label style="display:flex;align-items:center;gap:7px;padding:5px 10px;cursor:pointer" onmouseover="this.style.background='#1e3a5f'" onmouseout="this.style.background='transparent'">
+      <input type="checkbox" value="${b}" ${chk?'checked':''} onchange="onDashBarrioChange()" style="accent-color:#f59e0b;width:13px;height:13px;cursor:pointer;flex-shrink:0">
+      <span style="font-size:.68rem;color:#e0f0ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${b}</span>
+    </label>`;
+  }).join('');
+  updateDashBarrioLabel();
+}
+
+function onDashBarrioChange(){
+  const list=$('dash-barrio-list'); if(!list)return;
+  const checked=[...list.querySelectorAll('input:checked')].map(c=>c.value);
+  const all=[...list.querySelectorAll('input')].map(c=>c.value);
+  _dashBarriosSel=(checked.length===0||checked.length===all.length)?new Set():new Set(checked);
+  updateDashBarrioLabel(); renderDash();
+}
+
+function updateDashBarrioLabel(){
+  const lbl=$('dash-barrio-label'); if(!lbl)return;
+  lbl.textContent=_dashBarriosSel.size===0?'All':`${_dashBarriosSel.size} barrio${_dashBarriosSel.size>1?'s':''}`;
+  lbl.style.color=_dashBarriosSel.size===0?'#e0f0ff':'#f59e0b';
+}
+
+function toggleDashBarrioDropdown(e){
+  e.stopPropagation();
+  const p=$('dash-barrio-panel'); if(!p)return;
+  p.style.display=p.style.display!=='none'?'none':'block';
+}
+
+function dashBarrioSelAll(){
+  const list=$('dash-barrio-list'); if(!list)return;
+  list.querySelectorAll('input').forEach(c=>c.checked=true);
+  _dashBarriosSel=new Set(); updateDashBarrioLabel(); renderDash();
+}
+
+function dashBarrioSelNone(){
+  const list=$('dash-barrio-list'); if(!list)return;
+  list.querySelectorAll('input').forEach(c=>c.checked=false);
+  _dashBarriosSel=new Set(); updateDashBarrioLabel(); renderDash();
+}
+
+document.addEventListener('click',function(e){
+  const wrap=$('dash-barrio-wrap'), panel=$('dash-barrio-panel');
+  if(wrap&&panel&&!wrap.contains(e.target)) panel.style.display='none';
+});
+
+function resetDashFiltros(){
+  if($('dash-upz-syc')) $('dash-upz-syc').value='';
+  if($('dash-desde-syc')) $('dash-desde-syc').value='';
+  if($('dash-hasta-syc')) $('dash-hasta-syc').value='';
+  if($('dash-tema-sel')) $('dash-tema-sel').value='';
+  dashTema=''; _dashBarriosSel=new Set();
+  clearDashDir();
+}
+
+function pbiKpi(val,label){
+  return `<div style="background:#112233;border-radius:6px;padding:16px 12px;text-align:center;min-width:0">
+    <div style="font-size:2rem;font-weight:800;color:#fff;line-height:1;margin-bottom:4px">${Number(val||0).toLocaleString('es-CO')}</div>
+    <div style="font-size:.56rem;font-weight:700;text-transform:uppercase;letter-spacing:.09em;color:#f59e0b">${label}</div>
+  </div>`;
+}
+
+function pbiBarH(data,title){
+  if(!data||!data.length) return '';
+  const max=Math.max(...data.map(d=>d.v),1);
+  const bars=data.slice(0,9).map((d,i)=>{
+    const pct=Math.round((d.v/max)*100);
+    const lbl=d.k.replace(/\d+\s*/,'').slice(0,14);
+    return `<div style="display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;min-width:0">
+      <div style="font-size:.6rem;font-weight:700;color:#e0f0ff">${d.v}</div>
+      <div style="width:80%;background:${UPZ_BAR_COLORS[i%UPZ_BAR_COLORS.length]};height:${Math.max(pct*0.85,4)}px;border-radius:2px 2px 0 0"></div>
+      <div style="font-size:.48rem;color:#7090a8;text-align:center;line-height:1.2;word-break:break-all;max-width:100%">${lbl}</div>
+    </div>`;
+  }).join('');
+  return `<div style="background:#112233;border-radius:8px;padding:14px">
+    <div style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#f59e0b;margin-bottom:10px">${title}</div>
+    <div style="display:flex;align-items:flex-end;gap:4px;height:110px">${bars}</div>
+  </div>`;
+}
+
+function pbiDonut(data,title){
+  if(!data||!data.length) return '';
+  const total=data.reduce((a,d)=>a+d.v,0)||1;
+  let cAngle=-90;
+  const slices=data.slice(0,12).map((d,i)=>{
+    const pct=d.v/total, angle=pct*360, r=48,cx=60,cy=60;
+    const toRad=a=>a*Math.PI/180;
+    const x1=cx+r*Math.cos(toRad(cAngle)), y1=cy+r*Math.sin(toRad(cAngle));
+    cAngle+=angle;
+    const x2=cx+r*Math.cos(toRad(cAngle)), y2=cy+r*Math.sin(toRad(cAngle));
+    const large=angle>180?1:0;
+    return `<path d="M${cx} ${cy} L${x1} ${y1} A${r} ${r} 0 ${large} 1 ${x2} ${y2}Z" fill="${DASH_COLORS[i%DASH_COLORS.length]}"/>`;
+  }).join('');
+  const legend=data.slice(0,12).map((d,i)=>
+    `<div style="display:flex;align-items:center;gap:5px">
+      <div style="width:10px;height:10px;border-radius:2px;background:${DASH_COLORS[i%DASH_COLORS.length]};flex-shrink:0"></div>
+      <span style="font-size:.58rem;color:#b0cce0">${d.k} <span style="color:#e0f0ff;font-weight:700">${d.v}</span></span>
+    </div>`
+  ).join('');
+  return `<div style="background:#112233;border-radius:8px;padding:14px">
+    <div style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#f59e0b;margin-bottom:10px">${title}</div>
+    <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+      <svg width="120" height="120" viewBox="0 0 120 120" style="flex-shrink:0">
+        ${slices}
+        <circle cx="60" cy="60" r="28" fill="#112233"/>
+        <text x="60" y="64" text-anchor="middle" font-size="12" font-weight="800" fill="#fff">${total.toLocaleString('es-CO')}</text>
+      </svg>
+      <div style="display:flex;flex-direction:column;gap:5px;flex:1;min-width:0">${legend}</div>
+    </div>
+  </div>`;
+}
+
+function pbiSparkline(data,label,color){
+  if(!data||data.length<2) return '';
+  const max=Math.max(...data.map(d=>d.v),1), w=200, h=60;
+  const pts=data.map((d,i)=>{
+    const x=(i/(data.length-1))*w, y=h-(d.v/max)*(h-8)-4;
+    return `${x},${y}`;
+  }).join(' ');
+  const xLabels=data.filter((_,i)=>i===0||i===Math.floor(data.length/2)||i===data.length-1).map(d=>{
+    const i=data.indexOf(d), x=(i/(data.length-1))*w;
+    return `<text x="${x}" y="${h+12}" text-anchor="middle" font-size="8" fill="#7090a8">${d.k}</text>`;
+  }).join('');
+  return `<div style="background:#112233;border-radius:8px;padding:14px">
+    <div style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#f59e0b;margin-bottom:8px">${label}</div>
+    <svg width="100%" viewBox="0 0 ${w} ${h+16}" style="overflow:visible">
+      <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linejoin="round"/>
+      ${data.map((d,i)=>`<circle cx="${(i/(data.length-1))*w}" cy="${h-(d.v/max)*(h-8)-4}" r="2.5" fill="${color}"/>`).join('')}
+      ${xLabels}
+    </svg>
+  </div>`;
+}
+
+function countByDash(arr,fn){
+  const m={};
+  arr.forEach(r=>{const k=fn(r);if(k)m[k]=(m[k]||0)+1;});
+  return Object.entries(m).map(([k,v])=>({k,v})).sort((a,b)=>b.v-a.v);
+}
+
+function monthlyDataDash(arr){
+  const m={};
+  arr.forEach(r=>{
+    const f=r.meta?.fecha||'';
+    if(f.length>=7){const ym=f.slice(0,7);m[ym]=(m[ym]||0)+1;}
+  });
+  return Object.entries(m).sort((a,b)=>a[0]>b[0]?1:-1).map(([k,v])=>({k:k.slice(5),v}));
+}
+
+function sumInd(rs,key){ return rs.reduce((a,r)=>a+Number((r.ind||{})[key]||0),0); }
+
+function renderDash(){
+  const box=$('dashContent');
+  if(!box) return;
+  const all=Store.list;
+  if(all.length===0){ box.innerHTML=`<div style="text-align:center;padding:60px;color:#4a7fa5"><div style="font-size:2.5rem;margin-bottom:10px">📊</div><div style="font-weight:700;color:#7090a8">Sin datos todavía</div></div>`; return; }
+
+  // Poblar UPZ filter
+  const upzSel=$('dash-upz-syc');
+  if(upzSel && upzSel.options.length<=1){
+    const upzs=[...new Set(all.map(r=>r.meta?.upz||'').filter(Boolean))].sort();
+    upzs.forEach(u=>{const o=document.createElement('option');o.value=u;o.textContent=u;upzSel.appendChild(o);});
+  }
+
+  // Poblar selector de temáticas en filtros
+  const temaSel=$('dash-tema-sel');
+  if(temaSel && temaSel.options.length<=1){
+    const temas=[...new Set(all.map(r=>r.meta?.tematica||'').filter(Boolean))].sort();
+    temas.forEach(t=>{const o=document.createElement('option');o.value=t;o.textContent=t;temaSel.appendChild(o);});
+  }
+  if(temaSel) temaSel.value=dashTema;
+
+  // Poblar barrios
+  populateDashBarrioFilter();
+
+  // Sidebar de temas
+  const temaBox=$('dash-temas');
+  if(temaBox){
+    const temas=[...new Set(all.map(r=>r.meta?.tematica||'').filter(Boolean))].sort();
+    temaBox.innerHTML=`<button onclick="setDashTema('')" style="width:100%;text-align:left;padding:7px 10px;border-radius:6px;border:none;font-family:'Inter',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;margin-bottom:2px;background:${!dashTema?'#f59e0b':'#1e3a5f'};color:${!dashTema?'#0a1628':'#e0f0ff'}">
+      📊 Todas
+    </button>`+temas.map(t=>`<button onclick="setDashTema('${t}')" style="width:100%;text-align:left;padding:7px 10px;border-radius:6px;border:none;font-family:'Inter',sans-serif;font-size:.7rem;font-weight:600;cursor:pointer;margin-bottom:2px;background:${dashTema===t?'#1e40af':'transparent'};color:${dashTema===t?'#fff':'#7090a8'}">${t}</button>`).join('');
+  }
+
+  const rs=getDashRecs();
+  if(rs.length===0){ box.innerHTML=`<div style="text-align:center;padding:60px;color:#4a7fa5"><div style="font-size:2rem;margin-bottom:8px">🔍</div><div style="color:#7090a8;font-weight:700">Sin resultados para los filtros seleccionados</div></div>`; return; }
+
+  // KPIs globales
+  const tot=rs.length;
+  const conActa=rs.filter(r=>r.meta?.linkActa&&r.meta.linkActa.trim()).length;
+  const canc=rs.filter(r=>r.meta?.cancelada==='SI').length;
+  const personas=sumInd(rs,'personasAbordadas');
+  const requisas=sumInd(rs,'requisasPersonas')+sumInd(rs,'requisasCiclistas');
+  const comp=sumInd(rs,'comparendos');
+  const armas=sumInd(rs,'armasBlancas')+sumInd(rs,'armasFogueo')+sumInd(rs,'armasTraumaticas');
+  const spa=sumInd(rs,'dosisSPA');
+  const pctActa=tot>0?Math.round(conActa/tot*100):0;
+
+  const upzData=countByDash(rs,r=>r.meta?.upz||'');
+  const temaData=countByDash(rs,r=>r.meta?.tematica||'');
+  const actData=countByDash(rs,r=>r.meta?.actividad||'').slice(0,8);
+  const monthly=monthlyDataDash(rs);
+  const modalData=countByDash(rs,r=>r.meta?.modalidad||'');
+
+  let html='';
+  // Fila 1: KPIs
+  html+=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">
+    ${pbiKpi(tot,'Total actividades')}
+    ${pbiKpi(personas,'Personas abordadas')}
+    ${pbiKpi(requisas,'Requisas PONAL')}
+    ${pbiKpi(comp,'Comparendos')}
+  </div>`;
+  // Fila 2: actas + armas
+  html+=`<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:12px">
+    ${pbiKpi(conActa,'Con acta cargada')}
+    ${pbiKpi(tot-conActa,'Sin acta cargada')}
+    ${pbiKpi(armas,'Armas incautadas')}
+    ${pbiKpi(spa,'Dosis SPA')}
+  </div>`;
+  // Fila 3: donut temática + barras UPZ
+  html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+    ${pbiDonut(temaData,'ACTIVIDADES POR TEMÁTICA')}
+    ${pbiBarH(upzData,'OPERATIVOS POR UPZ')}
+  </div>`;
+  // Fila 4: actividades más frecuentes + modalidad
+  if(actData.length>0){
+    html+=`<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px">
+      ${pbiDonut(actData,'ACTIVIDADES MÁS FRECUENTES')}
+      ${pbiDonut(modalData,'MODALIDAD')}
+    </div>`;
+  }
+  // Fila 5: sparkline + % actas
+  const actaRing=`<div style="background:#112233;border-radius:8px;padding:14px;display:flex;flex-direction:column;align-items:center;justify-content:center">
+    <div style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#f59e0b;margin-bottom:10px;align-self:flex-start">% CUMPLIMIENTO ACTAS</div>
+    <svg width="100" height="100" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="40" fill="none" stroke="#1e3a5f" stroke-width="10"/>
+      <circle cx="50" cy="50" r="40" fill="none" stroke="${pctActa>=80?'#10b981':pctActa>=50?'#f59e0b':'#ef4444'}" stroke-width="10"
+        stroke-dasharray="${pctActa*2.513} 251.3" stroke-linecap="round" transform="rotate(-90 50 50)"/>
+      <text x="50" y="55" text-anchor="middle" font-size="18" font-weight="800" fill="#fff">${pctActa}%</text>
+    </svg>
+    <div style="font-size:.68rem;color:#7090a8;margin-top:8px">${canc} cancelada(s)</div>
+  </div>`;
+  if(monthly.length>1){
+    html+=`<div style="display:grid;grid-template-columns:2fr 1fr;gap:10px;margin-bottom:12px">
+      ${pbiSparkline(monthly,'TENDENCIA MENSUAL DE ACTIVIDADES','#3b82f6')}
+      ${actaRing}
+    </div>`;
+  } else { html+=`<div style="margin-bottom:12px">${actaRing}</div>`; }
+
+  // Fila 6: tabla de indicadores
+  const indTot={};IND_KEYS.forEach(k=>indTot[k]=0);
+  rs.forEach(r=>{const i=r.ind||{};IND_KEYS.forEach(k=>indTot[k]+=Number(i[k])||0);});
+  const indRows=IND_GROUPS.map(g=>{
+    const rows=g.items.filter(it=>(indTot[it[0]]||0)>0);
+    if(!rows.length) return '';
+    return `<div style="margin-bottom:4px">
+      <div style="font-size:.6rem;font-weight:800;color:#f59e0b;text-transform:uppercase;padding:6px 0 4px;border-bottom:1px solid #1e3a5f;margin-bottom:4px">${g.icon} ${g.title}</div>
+      ${rows.map(it=>`<div style="display:flex;justify-content:space-between;font-size:.74rem;color:#b0cce0;padding:3px 0;border-bottom:1px solid #0d1b2a"><span>${it[1]}</span><b style="color:#fff">${indTot[it[0]].toLocaleString('es-CO')}</b></div>`).join('')}
+    </div>`;
+  }).join('');
+  if(indRows.trim()){
+    html+=`<div style="background:#112233;border-radius:8px;padding:14px;margin-bottom:12px">
+      <div style="font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.08em;color:#f59e0b;margin-bottom:10px">TOTALES DE INDICADORES</div>
+      ${indRows}
+    </div>`;
+  }
+
+  box.innerHTML=html;
+}
+
+function setDashTema(t){ dashTema=t; if($('dash-tema-sel'))$('dash-tema-sel').value=t; renderDash(); }
+
+/* ═══════════ EXCEL ═══════════ */
+const XLS_HEADERS=["FECHA DE LA ACTIVIDAD","RESPONSABLE","HORA INICIO","HORA FIN","LUGAR","DIRECCIÓN","MODALIDAD","PROXIMIDAD A UN ENTORNO","TIPO DE ENTORNO","ENTORNO ESCOLAR","NOMBRE DEL PARQUE","UPZ","BARRIO","TEMÁTICA","ACTIVIDAD","NÚMERO DE CLP","TEMÁTICA RECORRIDO","TIPO JORNADA ZONA SEGURA","TALLER ENTORNOS ESCOLARES","TALLER CONVIVENCIA","¿CANCELADA?","RAZÓN CANCELACIÓN","DESARROLLO","OBSERVACIONES","COMPROMISOS","ENTIDADES"].concat(IND_KEYS.map(k=>IND_LABEL[k].toUpperCase())).concat(["OTROS RESULTADOS"]);
+function exportExcel(){
+  const list=applyFilters(Store.list);
+  if(list.length===0){ toast('No hay datos para exportar','err'); return; }
+  const rows=list.map(r=>{ const m=r.meta||{},i=r.ind||{};
+    const base=[fmtDate(m.fecha),m.responsable,m.horaInicio,m.horaFin,m.lugar,m.direccion,m.modalidad,m.proximidad,m.tipoEntorno,m.entornoEscolar,m.nombreParque,m.upz,m.barrio,m.tematica,m.actividad,m.numeroCLP,m.tematicaRecorrido,m.tipoJornadaZS,m.tematicaTallerEE,m.tematicaTallerConv,m.cancelada,m.razonCancelacion,m.desarrollo,m.observaciones,m.compromisos,(m.entidades||[]).join(';')];
+    IND_KEYS.forEach(k=>base.push(Number(i[k])||0)); base.push(i.otrosResultados||'');
+    return base;
+  });
+  const ws=XLSX.utils.aoa_to_sheet([XLS_HEADERS,...rows]);
+  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'CIERRES');
+  XLSX.writeFile(wb,`Cierre_Seguridad_${new Date().toISOString().slice(0,10)}.xlsx`);
+  toast('Excel exportado ('+rows.length+')','ok');
+}
+function normH(s){ return (s||'').toString().toUpperCase().replace(/\s+/g,' ').replace(/[\n\r]/g,' ').trim(); }
+function borrarImportados(){
+  if(!usingFirebase){
+    const keys = Object.entries(Store.map).filter(([,v])=>v.meta?.importado||v.importado).map(([k])=>k);
+    if(!keys.length){ toast('No hay registros importados',''); return; }
+    if(!confirm(`¿Borrar ${keys.length} registro(s) importado(s)? Esta acción no se puede deshacer.`)) return;
+    keys.forEach(k=>Store.remove(k));
+    toast(`${keys.length} registro(s) importado(s) eliminado(s)`,'ok');
+    renderRecs(); return;
+  }
+  // Firebase: leer nodo, filtrar importados y borrar con PIN
+  askPin('Borrar importados','Ingresa el PIN para eliminar todos los registros importados.', ()=>{
+    ref.once('value').then(snap=>{
+      const data = snap.val()||{};
+      const keys = Object.entries(data).filter(([,v])=>v.meta?.importado||v.importado).map(([k])=>k);
+      if(!keys.length){ toast('No hay registros importados',''); return; }
+      const updates = {};
+      keys.forEach(k=>{ updates[k]=null; });
+      ref.update(updates).then(()=>{
+        toast(`${keys.length} registro(s) importado(s) eliminado(s)`,'ok');
+        renderRecs();
+      });
+    });
+  });
+}
+
+function importExcel(input){
+  const file=input.files[0]; if(!file)return;
+  const rd=new FileReader();
+  rd.onload=e=>{
+    try{
+      const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array',cellDates:true});
+      const wsName=wb.SheetNames.includes('CIERRES')?'CIERRES':wb.SheetNames[0];
+      const data=XLSX.utils.sheet_to_json(wb.Sheets[wsName],{header:1,defval:''});
+      if(data.length<2){ toast('Hoja vacía','err'); return; }
+      const hdr=data[0].map(normH);
+      const col=name=>hdr.findIndex(h=>h.includes(normH(name)));
+      // mapa de columnas del Forms original + del export propio
+      const C={
+        fecha:[col('FECHA DE LA ACTIVIDAD')],
+        resp:[col('RESPONSABLE DE LA ACTIVIDAD'),col('RESPONSABLE')],
+        hIni:[col('HORA DE INICIO'),col('HORA INICIO')],
+        hFin:[col('HORA DE FINALIZACIÓN'),col('HORA FIN')],
+        lugar:[col('LUGAR')], dir:[col('DIRECCIÓN')], mod:[col('MODALIDAD')],
+        prox:[col('PROXIMIDAD A UN ENTORNO')], tEnt:[col('TIPO DE ENTORNO')],
+        parque:[col('NOMBRE DEL PARQUE')], colegio:[col('ENTORNO ESCOLAR')],
+        upz:[col('UPZ')], barrio:[col('BARRIO')], tema:[col('TEMÁTICA')],
+        clp:[col('NÚMERO DE CLP')], recorrido:[col('TEMÁTICA RECORRIDO')],
+        zs:[col('TIPO DE JORNADA DE ZONA SEGURA'),col('TIPO JORNADA ZONA SEGURA')],
+        cancel:[col('¿LA ACTIVIDAD FUE CANCELADA?'),col('¿CANCELADA?')],
+        razon:[col('RAZON POR LA CUAL FUE CANCELADA'),col('RAZÓN CANCELACIÓN')],
+        des:[col('DESARROLLO DE LA ACTIVIDAD'),col('DESARROLLO')],
+        obs:[col('OBSERVACIONES O NOVEDADES'),col('OBSERVACIONES')],
+        comp:[col('COMPROMISOS ADQUIRIDOS'),col('COMPROMISOS')],
+        ent:[col('ENTIDADES QUE ACOMPAÑAN LA ACTIVIDAD'),col('ENTIDADES QUE ACOMPAÑAN'),col('ENTIDADES')],
+        actS:[col('ACTIVIDAD - SEGURIDAD')], actC:[col('ACTIVIDAD - CONVIVENCIA')],
+        actE:[col('ACTIVIDAD - ENTORNOS ESCOLARES')], actD:[col('ACTIVIDAD - DERECHOS HUMANOS')],
+        actM:[col('TIPO DE MESA DE TRABAJO')], actO:[col('ACTIVIDAD - OTRO')], act:[col('ACTIVIDAD')]
+      };
+      const pick=(row,arr)=>{ for(const idx of arr){ if(idx>=0 && row[idx]!=='' && row[idx]!=null) return row[idx]; } return ''; };
+      // indicadores: busca por etiqueta
+      const indCols={}; IND_KEYS.forEach(k=>{ indCols[k]=hdr.findIndex(h=>h===normH(IND_LABEL[k])); });
+      // mapeos directos del Forms original
+      const directInd={ 'requisasPersonas':'REGISTROS (REQUISAS) PONAL A PERSONAS','requisasCiclistas':'REGISTROS (REQUISAS) PONAL A CICLISTAS URBANOS','antecedentes':'VERIFICACIÓN DE ANTECEDENTES','imei':'VERIFICACIÓN IMEI','vehiculos':'REGISTRO PONAL A VEHICULOS','motocicletas':'REGISTROS PONAL A MOTOCICLETAS','carreteros':'REGISTROS PONAL A CARRETEROS','chc':'REGISTROS PONAL A CHC','carretasReg':'CARRETAS REGISTRADAS','cambuchesReg':'CAMBUCHES REGISTRADOS','carretasInc':'CARRETAS INCAUTADAS','cambuchesDesm':'CAMBUCHES DESMONTADOS','armasBlancas':'ARMAS BLANCAS','armasFogueo':'ARMAS DE FUEGO - FOGUEO','armasTraumaticas':'ARMAS TRAUMATICAS','dosisSPA':'DOSIS SPA (UNIDADES)','biciRecuperadas':'BICICLETAS RECUPERADAS','celularesRecuperados':'CELULARES RECUPERADOS','espacioM2':'ESPACIO RECUPERADO (M2)','residuoM3':'RESIDUO VOLUMINOSO RECOLECTADO (M3)','comparendos':'ORDENES DE COMPARENDO','personasAbordadas':'PERSONAS ABORDADAS (SENSIBILIZACIONES)','riniasDisuadidas':'RIÑAS DISUADIDAS','cursosAbordados':'CURSOS ABORDADOS','busesSITP':'BUSES SITP ABORDADOS','ciclistasAbordados':'CICLISTAS URBANOS ABORDADOS','biciVerificadas':'BICICLETAS VERIFICADAS','biciMarcadas':'BICICLETAS MARCADAS','registroMiBici':'INSCRIPCIÓN REGISTRO MI BICI' };
+      Object.keys(directInd).forEach(k=>{ if(indCols[k]<0){ const idx=hdr.findIndex(h=>h.includes(normH(directInd[k]))); if(idx>=0) indCols[k]=idx; } });
+      const otrosIdx=hdr.findIndex(h=>h.includes('OTROS RESULTADOS'));
+
+      let n=0; const tasks=[];
+      for(let r=1;r<data.length;r++){
+        const row=data[r]; if(!row || row.every(c=>c===''||c==null)) continue;
+        const tema=normH(pick(row,C.tema));
+        let act=pick(row,C.act);
+        const respV=String(pick(row,C.resp)||'').trim();
+        if(act && respV && String(act).trim()===respV){ act=''; }
+        if(!act){ act=pick(row,C.actS)||pick(row,C.actC)||pick(row,C.actE)||pick(row,C.actD)||pick(row,C.actM)||pick(row,C.actO); }
+        if(!act){ act=pick(row,C.recorrido)||pick(row,[col('TEMÁTICA DE TALLER - ENTORNOS ESCOLARES')])||pick(row,[col('TEMÁTICA DE TALLER - CONVIVENCIA')])||pick(row,C.zs); }
+        let fechaV=pick(row,C.fecha);
+        let fecha='';
+        if(fechaV instanceof Date){ fecha=fechaV.toISOString().slice(0,10); }
+        else if(typeof fechaV==='string'){ const mch=fechaV.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/); if(mch) fecha=`${mch[3]}-${mch[2].padStart(2,'0')}-${mch[1].padStart(2,'0')}`; else fecha=fechaV; }
+        const meta={ responsable:String(pick(row,C.resp)||'').trim(), fecha, horaInicio:String(pick(row,C.hIni)||''), horaFin:String(pick(row,C.hFin)||''), lugar:String(pick(row,C.lugar)||'').trim(), direccion:String(pick(row,C.dir)||'').trim(), modalidad:normH(pick(row,C.mod)), proximidad:normH(pick(row,C.prox))||'NO', tipoEntorno:normH(pick(row,C.tEnt)), entornoEscolar:String(pick(row,C.colegio)||'').trim(), nombreParque:String(pick(row,C.parque)||'').trim(), upz:String(pick(row,C.upz)||'').trim(), barrio:String(pick(row,C.barrio)||'').trim().toUpperCase(), barrioRaw:String(pick(row,C.barrio)||'').trim().toUpperCase(), tematica:tema, actividad:String(act||'').trim(), numeroCLP:String(pick(row,C.clp)||''), tematicaRecorrido:String(pick(row,C.recorrido)||''), tipoJornadaZS:String(pick(row,C.zs)||''), tematicaTallerEE:'', tematicaTallerConv:'', cancelada:normH(pick(row,C.cancel))||'NO', razonCancelacion:String(pick(row,C.razon)||'').trim(), desarrollo:String(pick(row,C.des)||'').trim(), observaciones:String(pick(row,C.obs)||'').trim(), compromisos:String(pick(row,C.comp)||'').trim(), entidades:String(pick(row,C.ent)||'').split(';').map(s=>s.trim()).filter(Boolean), creado:Date.now()+r, actualizado:Date.now(), importado:true };
+        const ind={}; IND_KEYS.forEach(k=>{ const idx=indCols[k]; const raw=idx>=0?(Number(row[idx])||0):0; ind[k]=raw>99999?0:raw; });
+        ind.otrosResultados=otrosIdx>=0?String(row[otrosIdx]||''):'';
+        tasks.push(Store.push({meta,ind})); n++;
+      }
+      Promise.all(tasks).then(()=>{ toast('Importadas '+n+' actividades','ok'); renderRecs(); });
+    }catch(err){ console.error(err); toast('Error al leer el Excel','err'); }
+    input.value='';
+  };
+  rd.readAsArrayBuffer(file);
+}
+
+/* ═══════════ PDF ACTA RESUMEN ═══════════ */
+function genActaPdf(r){
+  const {jsPDF}=window.jspdf; const doc=new jsPDF({unit:'pt',format:'letter'});
+  const m=r.meta||{},ind=r.ind||{}; let y=54; const L=54, W=504;
+  doc.setFillColor(30,58,138); doc.rect(0,0,612,40,'F');
+  doc.setTextColor(255); doc.setFont('helvetica','bold'); doc.setFontSize(13);
+  doc.text('ALCALDÍA LOCAL DE ENGATIVÁ · SEGURIDAD Y CONVIVENCIA',L,26);
+  doc.setTextColor(15,23,42); y=64;
+  doc.setFontSize(12); doc.text('Cierre de actividad',L,y); y+=18;
+  function line(lab,val){ if(val===undefined||val===null||val===''||val==='0')return; doc.setFont('helvetica','bold'); doc.setFontSize(9); doc.text(lab,L,y); doc.setFont('helvetica','normal'); const tx=doc.splitTextToSize(String(val),W-110); doc.text(tx,L+110,y); y+=Math.max(14,tx.length*12); if(y>720){doc.addPage();y=54;} }
+  line('Actividad:',m.actividad); line('Temática:',m.tematica); line('Fecha:',fmtDate(m.fecha));
+  line('Horario:',(m.horaInicio||'')+(m.horaFin?' - '+m.horaFin:'')); line('Responsable:',m.responsable);
+  line('Modalidad:',m.modalidad); line('Lugar:',m.lugar); line('Dirección:',m.direccion);
+  line('Barrio / UPZ:',(m.barrio||'')+' · '+(m.upz||'')); 
+  if(m.proximidad==='SI') line('Entorno:',(m.tipoEntorno||'')+' '+(m.entornoEscolar||m.nombreParque||''));
+  line('Entidades:',(m.entidades||[]).join(', '));
+  if(m.cancelada==='SI'){ line('CANCELADA:',m.razonCancelacion||'Sí'); }
+  y+=6; doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.text('Desarrollo de la actividad',L,y); y+=14;
+  doc.setFont('helvetica','normal'); doc.setFontSize(9);
+  const dev=doc.splitTextToSize(m.desarrollo||'—',W); doc.text(dev,L,y); y+=dev.length*11+8;
+  if(y>700){doc.addPage();y=54;}
+  if(m.observaciones){ doc.setFont('helvetica','bold');doc.text('Observaciones',L,y);y+=13; doc.setFont('helvetica','normal'); const o=doc.splitTextToSize(m.observaciones,W); doc.text(o,L,y); y+=o.length*11+6; }
+  if(m.compromisos){ doc.setFont('helvetica','bold');doc.text('Compromisos',L,y);y+=13; doc.setFont('helvetica','normal'); const c=doc.splitTextToSize(m.compromisos,W); doc.text(c,L,y); y+=c.length*11+6; }
+  // indicadores
+  const indHas=IND_KEYS.filter(k=>(Number(ind[k])||0)>0);
+  if(indHas.length){ if(y>650){doc.addPage();y=54;} doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.text('Indicadores',L,y); y+=14; doc.setFontSize(9);
+    indHas.forEach(k=>{ doc.setFont('helvetica','normal'); doc.text(IND_LABEL[k]+':',L,y); doc.setFont('helvetica','bold'); doc.text(String(ind[k]),L+260,y); y+=12; if(y>740){doc.addPage();y=54;} }); }
+  doc.save(`Cierre_${(m.actividad||'actividad').slice(0,20).replace(/[^\w]/g,'_')}_${m.fecha||''}.pdf`);
+  toast('PDF generado','ok');
+}
+
+/* ═══════════ ARRANQUE ═══════════ */
+buildUI();
+onTemaChange(); updateConds();
+Store.init(()=>{ renderRecs(); if($('mview-dash').classList.contains('on')) renderDash(); });
+</script>
+</body>
+</html>
