@@ -230,6 +230,9 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
       <button class="nav-item" data-view="form" onclick="showView('form')">
         ✦ Nuevo registro
       </button>
+      <button class="nav-item" data-view="reporte" onclick="showView('reporte')">
+        📄 Reporte PDF
+      </button>
 
       <div class="nav-divider"></div>
       <span class="sidebar-label">Datos</span>
@@ -266,14 +269,30 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
 
       <div class="fil" id="filPanel">
         <div class="g3">
-          <div class="f"><label>Buscar (lugar/dirección/responsable)</label><input type="text" id="fTxt" oninput="renderRecs()" placeholder="texto…"></div>
-          <div class="f"><label>Temática</label><select id="fTema" onchange="renderRecs()"><option value="">Todas</option></select></div>
-          <div class="f"><label>UPZ</label><select id="fUpz" onchange="renderRecs()"><option value="">Todas</option></select></div>
+          <div class="f"><label>Buscar (lugar/responsable)</label><input type="text" id="fTxt" oninput="renderRecs()" placeholder="texto…"></div>
+          <div class="f"><label>Temática</label><select id="fTema" onchange="fTemaFilterChange()"><option value="">Todas</option></select></div>
+          <div class="f"><label>Tipo de actividad</label><select id="fActividad" onchange="renderRecs()"><option value="">Selecciona temática</option></select></div>
         </div>
         <div class="g3" style="margin-top:10px">
+          <div class="f"><label>UPZ</label><select id="fUpz" onchange="renderRecs()"><option value="">Todas</option></select></div>
           <div class="f"><label>Desde</label><input type="date" id="fDesde" onchange="renderRecs()"></div>
           <div class="f"><label>Hasta</label><input type="date" id="fHasta" onchange="renderRecs()"></div>
-
+        </div>
+        <div style="margin-top:10px">
+          <label>Buscar por dirección (constructor)</label>
+          <div class="ab">
+            <div class="ab-row">
+              <select id="fDirVia" onchange="composeDirBuilder('fDir','fDir',renderRecs)"><option value="">Vía</option><option>CL</option><option>CR</option><option>AV CL</option><option>AV CR</option><option>AK</option><option>AC</option><option>DG</option><option>TV</option><option>BIS</option></select>
+              <input type="text" id="fDirN1" placeholder="No." oninput="composeDirBuilder('fDir','fDir',renderRecs)">
+              <input type="text" id="fDirL1" placeholder="Letra" style="max-width:70px" oninput="composeDirBuilder('fDir','fDir',renderRecs)">
+              <span class="ab-sep">#</span>
+              <input type="text" id="fDirN2" placeholder="No." oninput="composeDirBuilder('fDir','fDir',renderRecs)">
+              <input type="text" id="fDirL2" placeholder="Letra" style="max-width:70px" oninput="composeDirBuilder('fDir','fDir',renderRecs)">
+              <span class="ab-sep">–</span>
+              <input type="text" id="fDirN3" placeholder="Placa" oninput="composeDirBuilder('fDir','fDir',renderRecs)">
+            </div>
+            <input type="text" id="fDir" placeholder="Dirección compuesta — o escribe aquí directamente" oninput="renderRecs()">
+          </div>
         </div>
         <div class="bar" style="margin-top:12px"><button class="btn btn-ghost btn-sm" onclick="clearFil()">Limpiar filtros</button></div>
       </div>
@@ -319,11 +338,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
       <div class="sp" id="s2">
         <div class="stitle">02 · Ubicación</div>
         <div class="card">
-          <div class="g2">
-            <div class="f"><label>Lugar <span class="req">*</span></label><input type="text" id="lugar" data-req data-lbl="Lugar" data-sec="s2" placeholder="Ej: CAI Calle 80, Colegio…, Parque…"></div>
-            <div class="f"><label>Modalidad <span class="req">*</span></label>
-              <select id="modalidad" data-req data-lbl="Modalidad" data-sec="s2" onchange="updateConds()"><option value="">—</option><option>PRESENCIAL</option><option>VIRTUAL</option></select></div>
-          </div>
+          <div class="f"><label>Lugar <span class="req">*</span></label><input type="text" id="lugar" data-req data-lbl="Lugar" data-sec="s2" placeholder="Ej: CAI Calle 80, Colegio…, Parque…"></div>
 
           <div style="margin-top:14px">
             <label>Dirección</label>
@@ -412,13 +427,11 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
 
       </div>
 
-      <!-- S4 DESARROLLO -->
+      <!-- S4 COMPROMISOS (solo mesas de trabajo) -->
       <div class="sp" id="s4">
-        <div class="stitle">04 · Desarrollo</div>
+        <div class="stitle">04 · Compromisos</div>
         <div class="card">
-          <div class="f"><label>Desarrollo de la actividad</label><textarea id="desarrollo" style="min-height:160px" placeholder="Describe el desarrollo de la actividad…"></textarea></div>
-          <div class="f" style="margin-top:14px"><label>Observaciones o novedades</label><textarea id="observaciones" placeholder="NO APLICA / N/A si no hay"></textarea></div>
-          <div class="f" style="margin-top:14px"><label>Compromisos adquiridos</label><textarea id="compromisos" placeholder="Compromisos (si aplica)"></textarea></div>
+          <div class="f"><label>Compromisos adquiridos</label><textarea id="compromisos" placeholder="Compromisos (si aplica)"></textarea></div>
         </div>
       </div>
 
@@ -432,33 +445,9 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
         </div>
       </div>
 
-      <!-- S6 ENTIDADES -->
-      <div class="sp" id="s6">
-        <div class="stitle">06 · Entidades que acompañan</div>
-        <div class="card">
-          <div class="f">
-            <label>Selecciona las entidades que acompañaron</label>
-            <div style="position:relative">
-              <div id="entDropBtn" onclick="toggleEntDrop()" style="cursor:pointer;background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:8px 11px;font-size:.84rem;color:var(--text);min-height:38px;display:flex;align-items:center;justify-content:space-between;gap:8px;user-select:none">
-                <span id="entDropLabel" style="color:#94a3b8">Ninguna seleccionada</span>
-                <span style="font-size:.7rem;color:var(--muted)">▼</span>
-              </div>
-              <div id="entDropPanel" style="display:none;position:absolute;top:calc(100% + 4px);left:0;right:0;background:#fff;border:1.5px solid var(--primary-light);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:50;max-height:220px;overflow-y:auto;padding:6px">
-                <div id="entDropList"></div>
-                <div style="border-top:1px solid var(--border);padding:8px 6px 4px;margin-top:4px">
-                  <div style="font-size:.62rem;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Otra entidad</div>
-                  <div class="bar"><input type="text" id="entOtra" placeholder="Nombre de la entidad" style="flex:1;font-size:.8rem"><button class="btn btn-ghost btn-sm" onclick="addEntOtra()">+ Agregar</button></div>
-                </div>
-              </div>
-            </div>
-            <div id="entTags" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:8px"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- S7 ACTA -->
+      <!-- S6 ACTA -->
       <div class="sp" id="s7">
-        <div class="stitle">07 · Link del acta</div>
+        <div class="stitle">06 · Link del acta</div>
         <div class="card">
           <div class="f">
             <label>URL del acta de la actividad</label>
@@ -566,6 +555,82 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
       </div>
     </div>
   </div>
+
+  <!-- ════════ VISTA REPORTE PDF ════════ -->
+  <div class="mview" id="mview-reporte">
+    <div class="ca">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;flex-wrap:wrap;gap:10px">
+        <div>
+          <div class="stitle" style="margin-bottom:4px">📄 Generador de Reporte PDF</div>
+          <div style="font-size:.75rem;color:var(--muted)">Reporte de resultados · selecciona los registros que deseas incluir</div>
+        </div>
+        <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+          <button onclick="reporteSeleccionarTodos()" style="padding:7px 14px;background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;border-radius:8px;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer">☑ Seleccionar todos</button>
+          <button onclick="reporteDeseleccionarTodos()" style="padding:7px 14px;background:#f1f5f9;color:#64748b;border:1.5px solid #e2e8f0;border-radius:8px;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer">☐ Deseleccionar</button>
+          <button id="btn-descargar-reporte" onclick="reporteDescargarPDF()" disabled style="padding:7px 18px;background:#94a3b8;color:#fff;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:700;cursor:not-allowed;display:flex;align-items:center;gap:6px;transition:all .2s">📄 Descargar PDF <span id="reporte-sel-cnt" style="background:rgba(255,255,255,.25);padding:1px 7px;border-radius:999px">0</span></button>
+        </div>
+      </div>
+
+      <!-- Fila 1: temática / actividad / acta -->
+      <div class="g3" style="margin-bottom:10px">
+        <div class="f"><label style="font-size:.7rem">Temática</label>
+          <select id="rpt-tema" onchange="rptTemaChange()"><option value="">— Todas —</option></select></div>
+        <div class="f"><label style="font-size:.7rem">Tipo de actividad</label>
+          <select id="rpt-actividad" onchange="reporteRenderLista()"><option value="">Selecciona temática</option></select></div>
+        <div class="f"><label style="font-size:.7rem">Acta</label>
+          <select id="rpt-acta" onchange="reporteRenderLista()">
+            <option value="">— Todas —</option>
+            <option value="con">✅ Con acta</option>
+            <option value="sin">⬜ Sin acta</option>
+          </select></div>
+      </div>
+
+      <!-- Fila 2: constructor de dirección -->
+      <div style="margin-bottom:10px">
+        <label style="font-size:.7rem">Buscar por dirección (constructor)</label>
+        <div class="ab">
+          <div class="ab-row">
+            <select id="rptDirVia" onchange="composeDirBuilder('rptDir','rptDir',reporteRenderLista)"><option value="">Vía</option><option>CL</option><option>CR</option><option>AV CL</option><option>AV CR</option><option>AK</option><option>AC</option><option>DG</option><option>TV</option><option>BIS</option></select>
+            <input type="text" id="rptDirN1" placeholder="No." oninput="composeDirBuilder('rptDir','rptDir',reporteRenderLista)">
+            <input type="text" id="rptDirL1" placeholder="Letra" style="max-width:70px" oninput="composeDirBuilder('rptDir','rptDir',reporteRenderLista)">
+            <span class="ab-sep">#</span>
+            <input type="text" id="rptDirN2" placeholder="No." oninput="composeDirBuilder('rptDir','rptDir',reporteRenderLista)">
+            <input type="text" id="rptDirL2" placeholder="Letra" style="max-width:70px" oninput="composeDirBuilder('rptDir','rptDir',reporteRenderLista)">
+            <span class="ab-sep">–</span>
+            <input type="text" id="rptDirN3" placeholder="Placa" oninput="composeDirBuilder('rptDir','rptDir',reporteRenderLista)">
+          </div>
+          <input type="text" id="rptDir" placeholder="Dirección compuesta — o escribe aquí directamente" oninput="reporteRenderLista()">
+        </div>
+      </div>
+
+      <!-- Fila 3: UPZ / Barrio / Cancelada / fechas -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr 1fr auto;gap:10px;margin-bottom:14px;align-items:end" id="reporte-filtros-row3">
+        <div class="f"><label style="font-size:.7rem">UPZ</label>
+          <select id="rpt-upz" onchange="reporteRenderLista()"><option value="">— Todas —</option></select></div>
+        <div class="f"><label style="font-size:.7rem">Barrio</label>
+          <select id="rpt-barrio" onchange="reporteRenderLista()"><option value="">— Todos —</option></select></div>
+        <div class="f"><label style="font-size:.7rem">Cancelada</label>
+          <select id="rpt-cancel" onchange="reporteRenderLista()">
+            <option value="">— Todas —</option>
+            <option value="SI">🚫 Sí</option>
+            <option value="NO">✅ No</option>
+          </select></div>
+        <div class="f"><label style="font-size:.7rem">Desde</label><input type="date" id="rpt-desde" onchange="reporteRenderLista()"></div>
+        <div class="f"><label style="font-size:.7rem">Hasta</label><input type="date" id="rpt-hasta" onchange="reporteRenderLista()"></div>
+        <button onclick="reporteLimpiarFiltros()" style="padding:8px 12px;background:#f1f5f9;color:#64748b;border:1.5px solid #e2e8f0;border-radius:8px;font-family:'Inter',sans-serif;font-size:.72rem;font-weight:700;cursor:pointer;white-space:nowrap">✕ Limpiar</button>
+      </div>
+
+      <!-- Contador seleccionados -->
+      <div id="reporte-resumen" style="background:#eff6ff;border:1.5px solid #93c5fd;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:.78rem;color:#1e40af;font-weight:600;display:none">
+        <span id="reporte-resumen-txt"></span>
+      </div>
+
+      <!-- Lista de registros con checkboxes -->
+      <div id="reporte-lista" style="display:flex;flex-direction:column;gap:6px"></div>
+
+    </div>
+  </div><!-- /mview-reporte -->
+
     </div><!-- /main-content -->
   </div><!-- /app-body -->
 </div><!-- /app -->
@@ -733,8 +798,8 @@ const Store = {
 function setStatus(t){ const e=document.getElementById('fbStatus'); if(e) e.textContent=t; }
 
 /* ═══════════ ESTADO FORM ═══════════ */
-const SECS = ['s1','s2','s3','s4','s5','s6'];
-const SEC_NAMES = {s1:'Identificación',s2:'Ubicación',s3:'Actividad',s4:'Desarrollo',s5:'Indicadores',s6:'Entidades'};
+const SECS = ['s1','s2','s3','s4','s5'];
+const SEC_NAMES = {s1:'Identificación',s2:'Ubicación',s3:'Actividad',s4:'Compromisos',s5:'Indicadores'};
 let curSec='s1';
 let editKey=null;
 let selEnt=new Set();
@@ -752,8 +817,6 @@ function buildUI(){
   fillSelect($('fUpz'),UPZ_LIST,'Todas');
   fillDatalist($('dlResp'),RESPONSABLES);
   fillDatalist($('dlColegios'),COLEGIOS);
-  // entidades chips
-  initEntDrop();
   // indicadores
   $('indContainer').innerHTML = IND_GROUPS.map(g=>`
     <div class="card" id="indgrp-${g.id}">
@@ -774,6 +837,7 @@ function showView(v){
   if(ni) ni.classList.add('on');
   $('saveBar').style.display = (v==='form')?'flex':'none';
   if(v==='dash') renderDash();
+  if(v==='reporte'){ reportePopularSelects(); reporteRenderLista(); }
   window.scrollTo(0,0);
 }
 function scrollToSec(s){ const e=$(s); if(e) e.scrollIntoView({behavior:'smooth',block:'start'}); }
@@ -802,6 +866,21 @@ function composeDir(){
   $('dir').value = s.trim();
 }
 function markDirManual(){ dirManual=true; }
+
+/* Constructor genérico de dirección para filtros (Resultados / Reporte PDF) */
+function composeDirBuilder(prefix,targetId,cb){
+  const g=id=>{const e=$(id); return e?e.value:'';};
+  const via=g(prefix+'Via'), n1=g(prefix+'N1').trim(), l1=g(prefix+'L1').trim().toUpperCase(),
+        n2=g(prefix+'N2').trim(), l2=g(prefix+'L2').trim().toUpperCase(), n3=g(prefix+'N3').trim();
+  let s='';
+  if(via||n1||n2||n3){
+    s=(via?via+' ':'')+n1+(l1?l1:'');
+    if(n2||l2||n3) s+=' # '+n2+(l2?l2:'')+(n3?' – '+n3:'');
+    s=s.trim();
+  }
+  const t=$(targetId); if(t) t.value=s;
+  if(cb) cb();
+}
 
 /* ═══════════ UPZ / BARRIO ═══════════ */
 function onUpzChange(){
@@ -842,6 +921,7 @@ function updateConds(){
   show('condZonaSegura', au.includes('ZONA') && au.includes('SEGURA'));
   show('condTallerEE', au.includes('TALLER') && t==='ENTORNOS ESCOLARES');
   show('condTallerConv', au.includes('TALLER') && t==='CONVIVENCIA');
+  $('s4').style.display = (t==='MESAS DE TRABAJO') ? 'block' : 'none';
   updateIndVisibility();
 }
 
@@ -889,60 +969,14 @@ function updateIndVisibility(){
   });
 }
 
-/* ═══════════ ENTIDADES ═══════════ */
-function initEntDrop(){
-  const list=$('entDropList'); if(!list)return;
-  list.innerHTML=ENTIDADES.map(e=>{
-    const on=selEnt.has(e);
-    return `<div class="ent-opt${on?' on':''}" data-ent="${e.replace(/"/g,'&quot;')}" onclick="toggleEntOpt(this)"><div class="chk">${on?'✓':''}</div><span>${e}</span></div>`;
-  }).join('');
-  updateEntLabel();
-}
-function toggleEntDrop(){
-  const p=$('entDropPanel');
-  p.style.display=(p.style.display==='none')?'block':'none';
-}
-function toggleEntOpt(el){
-  const v=el.dataset.ent;
-  if(selEnt.has(v)){ selEnt.delete(v); el.classList.remove('on'); el.querySelector('.chk').textContent=''; }
-  else { selEnt.add(v); el.classList.add('on'); el.querySelector('.chk').textContent='✓'; }
-  updateEntLabel(); updateEntTags();
-}
-function updateEntLabel(){
-  const lbl=$('entDropLabel'); if(!lbl)return;
-  const arr=Array.from(selEnt);
-  if(arr.length===0){ lbl.textContent='Ninguna seleccionada'; lbl.style.color='#94a3b8'; }
-  else { lbl.textContent=arr.length+' seleccionada'+(arr.length>1?'s':''); lbl.style.color='var(--text)'; }
-}
-function updateEntTags(){
-  const box=$('entTags'); if(!box)return;
-  box.innerHTML=Array.from(selEnt).map(e=>`<span class="ent-tag">${e}<button onclick="removeEnt(this.parentElement.textContent.slice(0,-1))">×</button></span>`).join('');
-}
-function removeEnt(v){
-  selEnt.delete(v);
-  const opt=document.querySelector(`#entDropList .ent-opt[data-ent="${v.replace(/"/g,'&quot;')}"]`);
-  if(opt){ opt.classList.remove('on'); opt.querySelector('.chk').textContent=''; }
-  updateEntLabel(); updateEntTags();
-}
-document.addEventListener('click',function(e){
-  const panel=$('entDropPanel'),btn=$('entDropBtn');
-  if(panel&&btn&&!panel.contains(e.target)&&!btn.contains(e.target)) panel.style.display='none';
-});
 
-function addEntOtra(){
-  const v=$('entOtra').value.trim(); if(!v) return;
-  if(!selEnt.has(v)){ selEnt.add(v); updateEntLabel(); updateEntTags(); }
-  $('entOtra').value='';
-}
 
-/* ═══════════ RECOLECTAR / VALIDAR ═══════════ */
 function reqVisible(){
   // campos requeridos según estado actual
   const r=[
     {id:'responsable',sec:'s1',lbl:'Responsable'},
     {id:'fecha',sec:'s1',lbl:'Fecha'},
     {id:'lugar',sec:'s2',lbl:'Lugar'},
-    {id:'modalidad',sec:'s2',lbl:'Modalidad'},
     {id:'upz',sec:'s2',lbl:'UPZ'},
     {id:'barrio',sec:'s2',lbl:'Barrio'},
     {id:'tematica',sec:'s3',lbl:'Temática'},
@@ -967,7 +1001,6 @@ function collect(){
     responsable:$('responsable').value.trim(), fecha:$('fecha').value,
     horaInicio:$('horaInicio').value, horaFin:$('horaFin').value,
     lugar:$('lugar').value.trim(), direccion:$('dir').value.trim(),
-    modalidad:$('modalidad').value,
     proximidad:$('proximidad').value||'NO', tipoEntorno:$('tipoEntorno').value,
     entornoEscolar:$('entornoEscolar').value.trim(), nombreParque:$('nombreParque').value.trim(),
     upz:$('upz').value, barrio:$('barrio').value==='OTRO'?$('barrioOtro').value.trim().toUpperCase():$('barrio').value,
@@ -975,8 +1008,8 @@ function collect(){
     tematica:t, actividad:actividad,
     numeroCLP:$('numeroCLP').value, tematicaRecorrido:$('tematicaRecorrido').value,
     tipoJornadaZS:$('tipoJornadaZS').value, tematicaTallerEE:$('tematicaTallerEE').value.trim(), tematicaTallerConv:$('tematicaTallerConv').value.trim(),
-    desarrollo:$('desarrollo').value.trim(), observaciones:$('observaciones').value.trim(), compromisos:$('compromisos').value.trim(),
-    entidades:Array.from(selEnt),
+    compromisos: (t==='MESAS DE TRABAJO') ? $('compromisos').value.trim() : '',
+    entidades:[],
     linkActa:$('linkActa')?$('linkActa').value.trim():'',
     creado: editKey&&Store.map[editKey]?(Store.map[editKey].meta.creado||Date.now()):Date.now(),
     actualizado: Date.now()
@@ -1005,13 +1038,12 @@ function saveRec(){
 
 function resetForm(toRecs){
   editKey=null; selEnt.clear(); dirManual=false;
-  ['responsable','lugar','dir','abN1','abL1','abN2','abL2','abN3','entornoEscolar','nombreParque','barrioOtro','actividadOtro','numeroCLP','tematicaTallerEE','tematicaTallerConv','desarrollo','observaciones','compromisos','otrosResultados','entOtra','linkActa'].forEach(id=>{const e=$(id); if(e)e.value='';});
-  ['modalidad','upz','barrio','tipoEntorno','tematica','actividadSel','tematicaRecorrido','tipoJornadaZS','horaInicio','horaFin'].forEach(id=>{const e=$(id); if(e)e.value='';});
+  ['responsable','lugar','dir','abN1','abL1','abN2','abL2','abN3','entornoEscolar','nombreParque','barrioOtro','actividadOtro','numeroCLP','tematicaTallerEE','tematicaTallerConv','compromisos','otrosResultados','linkActa'].forEach(id=>{const e=$(id); if(e)e.value='';});
+  ['upz','barrio','tipoEntorno','tematica','actividadSel','tematicaRecorrido','tipoJornadaZS','horaInicio','horaFin'].forEach(id=>{const e=$(id); if(e)e.value='';});
   $('fecha').value=new Date().toISOString().split('T')[0];
   $('proximidad').value='';
   setYNbtns('ynProx','');
   IND_KEYS.forEach(k=>$(k).value=0);
-  initEntDrop(); updateEntTags();
   $('btnSave').textContent='💾 Guardar'; $('btnCancelEdit').style.display='none';
   onTemaChange(); updateConds(); window.scrollTo(0,0);
   if(toRecs) showView('recs');
@@ -1025,20 +1057,29 @@ function temaBadgeClass(t){
 }
 function fmtDate(d){ if(!d)return''; const p=d.split('-'); return p.length===3?`${p[2]}/${p[1]}/${p[0]}`:d; }
 function applyFilters(list){
-  const txt=$('fTxt').value.toLowerCase().trim(), tema=$('fTema').value, upz=$('fUpz').value;
+  const txt=$('fTxt').value.toLowerCase().trim(), tema=$('fTema').value, actividad=$('fActividad').value, upz=$('fUpz').value;
   const desde=$('fDesde').value, hasta=$('fHasta').value;
+  const dir=($('fDir')?.value||'').toLowerCase().trim();
   return list.filter(r=>{
     const m=r.meta||{};
     if(tema && m.tematica!==tema) return false;
+    if(actividad && m.actividad!==actividad) return false;
     if(upz && m.upz!==upz) return false;
     if(desde && (m.fecha||'')<desde) return false;
     if(hasta && (m.fecha||'')>hasta) return false;
+    if(dir && !(m.direccion||'').toLowerCase().includes(dir)) return false;
     if(txt){
-      const blob=[m.lugar,m.direccion,m.responsable,m.actividad,m.barrio,m.upz].join(' ').toLowerCase();
+      const blob=[m.lugar,m.responsable,m.actividad,m.barrio,m.upz].join(' ').toLowerCase();
       if(!blob.includes(txt)) return false;
     }
     return true;
   });
+}
+function fTemaFilterChange(){
+  const t=$('fTema').value; const sel=$('fActividad');
+  if(t && ACT[t]){ sel.innerHTML='<option value="">Todas</option>'+ACT[t].map(a=>`<option>${a}</option>`).join(''); }
+  else { sel.innerHTML='<option value="">'+(t?'Todas':'Selecciona temática')+'</option>'; }
+  renderRecs();
 }
 function renderRecs(){
   const list=applyFilters(Store.list);
@@ -1089,7 +1130,11 @@ function renderRecs(){
   }).join('');
 }
 function toggleFil(){ $('filPanel').classList.toggle('on'); }
-function clearFil(){ ['fTxt','fTema','fUpz','fDesde','fHasta'].forEach(id=>$(id).value=''); renderRecs(); }
+function clearFil(){
+  ['fTxt','fTema','fUpz','fDesde','fHasta','fDir','fDirVia','fDirN1','fDirL1','fDirN2','fDirL2','fDirN3'].forEach(id=>{const e=$(id); if(e)e.value='';});
+  $('fActividad').innerHTML='<option value="">Selecciona temática</option>';
+  renderRecs();
+}
 
 /* ═══════════ DETALLE / EDITAR / ELIMINAR ═══════════ */
 let detKey=null;
@@ -1131,7 +1176,7 @@ function loadForEdit(k){
   const r=Store.map[k]; if(!r)return; const m=r.meta||{}, ind=r.ind||{};
   editKey=k;
   $('responsable').value=m.responsable||''; $('fecha').value=m.fecha||''; $('horaInicio').value=m.horaInicio||''; $('horaFin').value=m.horaFin||'';
-  $('lugar').value=m.lugar||''; $('dir').value=m.direccion||''; $('modalidad').value=m.modalidad||'';
+  $('lugar').value=m.lugar||''; $('dir').value=m.direccion||'';
   $('upz').value=m.upz||''; onUpzChange();
   if(m.barrioRaw==='OTRO'||(!BARRIOS[m.upz]||!BARRIOS[m.upz].includes(m.barrio))){ $('barrio').value='OTRO'; $('barrioOtro').value=m.barrio||''; }
   else $('barrio').value=m.barrio||'';
@@ -1145,12 +1190,9 @@ function loadForEdit(k){
   } else $('actividadSel').value=m.actividad||'';
   $('numeroCLP').value=m.numeroCLP||''; $('tematicaRecorrido').value=m.tematicaRecorrido||''; $('tipoJornadaZS').value=m.tipoJornadaZS||'';
   $('tematicaTallerEE').value=m.tematicaTallerEE||''; $('tematicaTallerConv').value=m.tematicaTallerConv||'';
-  $('desarrollo').value=m.desarrollo||''; $('observaciones').value=m.observaciones||''; $('compromisos').value=m.compromisos||'';
+  $('compromisos').value=m.compromisos||'';
   if($('linkActa')) $('linkActa').value=m.linkActa||'';
   IND_KEYS.forEach(kk=>$(kk).value=Number(ind[kk])||0); $('otrosResultados').value=ind.otrosResultados||'';
-  // entidades
-  selEnt=new Set(m.entidades||[]);
-  initEntDrop(); updateEntTags();
   updateConds();
   $('btnSave').textContent='💾 Actualizar'; $('btnCancelEdit').style.display='inline-flex';
   showView('form'); window.scrollTo(0,0); toast('Editando actividad','ok');
@@ -1630,6 +1672,254 @@ function genActaPdf(r){
     indHas.forEach(k=>{ doc.setFont('helvetica','normal'); doc.text(IND_LABEL[k]+':',L,y); doc.setFont('helvetica','bold'); doc.text(String(ind[k]),L+260,y); y+=12; if(y>740){doc.addPage();y=54;} }); }
   doc.save(`Cierre_${(m.actividad||'actividad').slice(0,20).replace(/[^\w]/g,'_')}_${m.fecha||''}.pdf`);
   toast('PDF generado','ok');
+}
+
+/* ═══════════════════════════════════════════════════════════
+   REPORTE PDF · REPORTE DE RESULTADOS
+   ═══════════════════════════════════════════════════════════ */
+const TEMA_COLORS = {
+  'SEGURIDAD':        {bg:'#dbeafe', fg:'#1e40af'},
+  'CONVIVENCIA':      {bg:'#dcfce7', fg:'#166534'},
+  'ENTORNOS ESCOLARES':{bg:'#ffedd5', fg:'#92400e'},
+  'MESAS DE TRABAJO':  {bg:'#ede9fe', fg:'#6d28d9'},
+  'DD.HH.':            {bg:'#fce7f3', fg:'#9d174d'},
+  'OTRO':              {bg:'#eff6ff', fg:'#1e3a8a'}
+};
+let _reporteSeleccionados = new Set();
+
+function reporteGetKey(r){
+  return r._k || (String(r.meta&&r.meta.fecha||'')+'|'+String(r.meta&&r.meta.actividad||'')+'|'+String(r.meta&&r.meta.direccion||''));
+}
+
+function reportePopularSelects(){
+  const temaSel=$('rpt-tema');
+  if(temaSel && temaSel.options.length<=1){
+    fillSelect(temaSel,Object.keys(ACT).concat(['OTRO']),'— Todas —');
+  }
+  const upzSel=$('rpt-upz');
+  if(upzSel){
+    const cur=upzSel.value;
+    const upzs=[...new Set(Store.list.map(r=>r.meta&&r.meta.upz||'').filter(Boolean))].sort();
+    upzSel.innerHTML='<option value="">— Todas —</option>'+upzs.map(u=>`<option>${u}</option>`).join('');
+    if(upzs.includes(cur)) upzSel.value=cur;
+  }
+  const barSel=$('rpt-barrio');
+  if(barSel){
+    const cur=barSel.value;
+    const bs=[...new Set(Store.list.map(r=>r.meta&&r.meta.barrio||'').filter(Boolean))].sort();
+    barSel.innerHTML='<option value="">— Todos —</option>'+bs.map(b=>`<option>${b}</option>`).join('');
+    if(bs.includes(cur)) barSel.value=cur;
+  }
+}
+
+function rptTemaChange(){
+  const t=$('rpt-tema').value;
+  const sel=$('rpt-actividad');
+  if(t && ACT[t]){
+    sel.innerHTML='<option value="">— Todas —</option>'+ACT[t].map(a=>`<option>${a}</option>`).join('');
+  } else if(t){
+    const acts=[...new Set(Store.list.filter(r=>(r.meta&&r.meta.tematica)===t).map(r=>r.meta.actividad).filter(Boolean))].sort();
+    sel.innerHTML='<option value="">— Todas —</option>'+acts.map(a=>`<option>${a}</option>`).join('');
+  } else {
+    sel.innerHTML='<option value="">Selecciona temática</option>';
+  }
+  reporteRenderLista();
+}
+
+function reporteGetFiltrados(){
+  const tema=$('rpt-tema')?.value||'', actividad=$('rpt-actividad')?.value||'';
+  const acta=$('rpt-acta')?.value||'', upz=$('rpt-upz')?.value||'', barrio=$('rpt-barrio')?.value||'';
+  const cancel=$('rpt-cancel')?.value||'';
+  const desde=$('rpt-desde')?.value||'', hasta=$('rpt-hasta')?.value||'';
+  const dir=($('rptDir')?.value||'').toLowerCase().trim();
+  return Store.list.filter(r=>{
+    const m=r.meta||{};
+    if(tema && m.tematica!==tema) return false;
+    if(actividad && m.actividad!==actividad) return false;
+    if(upz && m.upz!==upz) return false;
+    if(barrio && m.barrio!==barrio) return false;
+    if(cancel && (m.cancelada||'NO')!==cancel) return false;
+    if(desde && (m.fecha||'')<desde) return false;
+    if(hasta && (m.fecha||'')>hasta) return false;
+    if(dir && !(m.direccion||'').toLowerCase().includes(dir)) return false;
+    if(acta==='con' && !(m.linkActa&&m.linkActa.trim())) return false;
+    if(acta==='sin' && (m.linkActa&&m.linkActa.trim())) return false;
+    return true;
+  });
+}
+
+function _rptIndChips(ind){
+  ind=ind||{};
+  const has=IND_KEYS.filter(k=>(Number(ind[k])||0)>0);
+  return has.map(k=>IND_LABEL[k]+': '+ind[k]);
+}
+
+function reporteRenderLista(){
+  const lista=$('reporte-lista'), resumen=$('reporte-resumen'), rptTxt=$('reporte-resumen-txt');
+  if(!lista) return;
+  const filtrados=reporteGetFiltrados();
+  if(!filtrados.length){
+    lista.innerHTML='<div style="text-align:center;padding:40px;color:#94a3b8;font-size:13px">No hay registros con los filtros actuales</div>';
+    reporteActualizarBoton();
+    if(resumen) resumen.style.display='none';
+    return;
+  }
+  lista.innerHTML=filtrados.map(r=>{
+    const m=r.meta||{}, ind=r.ind||{};
+    const key=reporteGetKey(r); const sel=_reporteSeleccionados.has(key);
+    const tc=TEMA_COLORS[m.tematica]||{bg:'#eff6ff',fg:'#1e3a8a'};
+    const chips=_rptIndChips(ind);
+    const acta=m.linkActa&&m.linkActa.trim();
+    const actaLbl=acta?'<span style="color:#10b981;font-size:11px;font-weight:700">📎 Con acta</span>':'<span style="color:#94a3b8;font-size:11px">Sin acta</span>';
+    return `<div onclick="reporteToggle('${key.replace(/'/g,"\\'")}')" data-key="${key.replace(/"/g,'&quot;')}"
+      style="display:flex;align-items:center;gap:12px;padding:10px 14px;background:${sel?'#eff6ff':'#f8fafc'};border:1.5px solid ${sel?'#93c5fd':'#e2e8f0'};border-radius:10px;cursor:pointer;transition:all .15s;user-select:none">
+      <div style="width:20px;height:20px;border-radius:5px;border:2px solid ${sel?'#1e40af':'#cbd5e1'};background:${sel?'#1e40af':'#fff'};display:flex;align-items:center;justify-content:center;flex-shrink:0">
+        ${sel?'<svg width="12" height="12" viewBox="0 0 12 12"><polyline points="1,6 4,9 11,3" stroke="#fff" stroke-width="2" fill="none"/></svg>':''}
+      </div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:3px">
+          <span style="background:${tc.bg};color:${tc.fg};padding:1px 8px;border-radius:999px;font-size:11px;font-weight:700">${m.tematica||'—'}</span>
+          <span style="font-weight:700;font-size:12px;color:#1e293b">${m.actividad||'(sin actividad)'}</span>
+          <span style="font-size:11px;color:#64748b">${fmtDate(m.fecha)}</span>
+          ${actaLbl}
+          ${m.cancelada==='SI'?'<span style="color:#991b1b;font-size:11px;font-weight:700">🚫 Cancelada</span>':''}
+        </div>
+        <div style="font-size:12px;color:#1e40af;font-weight:600">${m.direccion||m.lugar||'—'}</div>
+        <div style="font-size:11px;color:#94a3b8">${m.barrio||''}${m.upz?' · '+m.upz:''}${m.responsable?' · 👤 '+m.responsable:''}</div>
+        ${chips.length?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">${chips.map(c=>`<span style="padding:1px 6px;background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;border-radius:4px;font-size:10px;font-weight:700">${c}</span>`).join('')}</div>`:''}
+        ${(!chips.length && m.compromisos)?`<div style="font-size:11px;color:#475569;margin-top:4px"><b>Compromisos:</b> ${m.compromisos}</div>`:''}
+      </div>
+    </div>`;
+  }).join('');
+  const nSel=_reporteSeleccionados.size;
+  if(nSel>0 && resumen && rptTxt){
+    resumen.style.display='block';
+    rptTxt.textContent=nSel+' registro(s) seleccionado(s) para el reporte';
+  } else if(resumen){ resumen.style.display='none'; }
+  reporteActualizarBoton();
+}
+
+function reporteToggle(key){
+  if(_reporteSeleccionados.has(key)) _reporteSeleccionados.delete(key);
+  else _reporteSeleccionados.add(key);
+  reporteRenderLista();
+}
+function reporteSeleccionarTodos(){
+  reporteGetFiltrados().forEach(r=>_reporteSeleccionados.add(reporteGetKey(r)));
+  reporteRenderLista();
+}
+function reporteDeseleccionarTodos(){
+  reporteGetFiltrados().forEach(r=>_reporteSeleccionados.delete(reporteGetKey(r)));
+  reporteRenderLista();
+}
+function reporteLimpiarFiltros(){
+  ['rpt-acta','rpt-upz','rpt-barrio','rpt-cancel','rpt-desde','rpt-hasta','rptDir','rptDirVia','rptDirN1','rptDirL1','rptDirN2','rptDirL2','rptDirN3'].forEach(id=>{const e=$(id); if(e)e.value='';});
+  $('rpt-tema').value='';
+  $('rpt-actividad').innerHTML='<option value="">Selecciona temática</option>';
+  reporteRenderLista();
+}
+function reporteActualizarBoton(){
+  const btn=$('btn-descargar-reporte'), cnt=$('reporte-sel-cnt');
+  const n=_reporteSeleccionados.size;
+  if(cnt) cnt.textContent=n;
+  if(btn){
+    if(n>0){ btn.disabled=false; btn.style.background='linear-gradient(135deg,#1e293b,#1e3a8a)'; btn.style.cursor='pointer'; }
+    else { btn.disabled=true; btn.style.background='#94a3b8'; btn.style.cursor='not-allowed'; }
+  }
+}
+function reporteDescargarPDF(){
+  const keySet=new Set(Array.from(_reporteSeleccionados));
+  const lista=Store.list.filter(r=>keySet.has(reporteGetKey(r)));
+  if(!lista.length){ toast('⚠ No hay registros seleccionados','err'); return; }
+  const tema=$('rpt-tema')?.value||'', actividad=$('rpt-actividad')?.value||'';
+  const filtrosTexto=[
+    tema?'Temática: '+tema:'',
+    actividad?'Actividad: '+actividad:'',
+  ].filter(Boolean).join(' | ') || 'Selección manual';
+  generarPDFReporteSeg(lista,filtrosTexto+' · '+lista.length+' registro(s)');
+}
+
+function generarPDFReporteSeg(lista,filtrosTexto){
+  const hoy=new Date();
+  const fecha=hoy.toLocaleDateString('es-CO',{day:'2-digit',month:'long',year:'numeric'});
+  const hora=hoy.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'});
+
+  const porTema={};
+  lista.forEach(r=>{ const t=(r.meta&&r.meta.tematica)||'—'; porTema[t]=(porTema[t]||0)+1; });
+  const resumenTema=Object.entries(porTema).map(([t,n])=>{
+    const tc=TEMA_COLORS[t]||{bg:'#f1f5f9',fg:'#334155'};
+    return `<span style="background:${tc.bg};color:${tc.fg};padding:3px 10px;border-radius:6px;font-size:11px;font-weight:700">${t}: <strong>${n}</strong></span>`;
+  }).join(' ');
+
+  const totInd={}; IND_KEYS.forEach(k=>totInd[k]=0);
+  lista.forEach(r=>{ const ind=r.ind||{}; IND_KEYS.forEach(k=>{ totInd[k]+=Number(ind[k])||0; }); });
+  const totalesChips=IND_GROUPS.map(g=>{
+    const items=g.items.filter(it=>totInd[it[0]]>0);
+    if(!items.length) return '';
+    return `<span style="background:#f8fafc;border:1px solid #e2e8f0;padding:3px 10px;border-radius:6px;font-size:11px">${g.icon} ${g.title}: `
+      +items.map(it=>`<strong>${totInd[it[0]]}</strong> ${it[1].toLowerCase()}`).join(', ')+'</span>';
+  }).filter(Boolean).join(' ');
+
+  const filas=lista.map((r,i)=>{
+    const m=r.meta||{}, ind=r.ind||{};
+    const tc=TEMA_COLORS[m.tematica]||{bg:'#f1f5f9',fg:'#334155'};
+    const chips=_rptIndChips(ind).join(' · ')||(m.compromisos?('Compromisos: '+m.compromisos):'—');
+    const actaIcon=(m.linkActa&&m.linkActa.trim())
+      ?'<a href="'+m.linkActa+'" style="color:#1d4ed8;font-size:10px">📎 Ver acta</a>'
+      :'<span style="color:#94a3b8;font-size:10px">—</span>';
+    return '<tr style="background:'+(i%2===0?'#f8fafc':'#fff')+'">'
+      +'<td style="padding:6px 8px;font-size:10px;color:#64748b;text-align:center">'+(i+1)+'</td>'
+      +'<td style="padding:6px 8px;font-size:10px;color:#334155">'+fmtDate(m.fecha)+'</td>'
+      +'<td style="padding:6px 8px;font-size:10px"><span style="background:'+tc.bg+';color:'+tc.fg+';padding:2px 6px;border-radius:4px;font-weight:700">'+(m.tematica||'—')+'</span></td>'
+      +'<td style="padding:6px 8px;font-size:10px;color:#334155">'+(m.actividad||'—')+'</td>'
+      +'<td style="padding:6px 8px;font-size:10px;color:#334155">'+(m.responsable||'—')+'</td>'
+      +'<td style="padding:6px 8px;font-size:10px;color:#334155;font-style:italic">'+(m.lugar||'—')+'</td>'
+      +'<td style="padding:6px 8px;font-size:10px;color:#334155">'+(m.barrio||'—')+(m.upz?' · '+m.upz:'')+'</td>'
+      +'<td style="padding:6px 8px;font-size:10px;color:#1e40af;font-weight:600">'+(m.direccion||'—')+'</td>'
+      +'<td style="padding:6px 8px;font-size:10px;color:#475569">'+chips+'</td>'
+      +'<td style="padding:6px 8px;text-align:center">'+actaIcon+'</td>'
+      +'</tr>';
+  }).join('');
+
+  const html='<!DOCTYPE html><html lang="es"><head><meta charset="UTF-8">'
+    +'<title>Reporte de resultados IVC SYC — '+fecha+'</title>'
+    +'<style>*{box-sizing:border-box;margin:0;padding:0}body{font-family:Arial,sans-serif;color:#1e293b}'
+    +'@media print{body{-webkit-print-color-adjust:exact;print-color-adjust:exact}tr{page-break-inside:avoid}}'
+    +'@page{margin:1.5cm;size:A4 landscape}</style></head><body>'
+    +'<div style="background:linear-gradient(135deg,#1e293b,#1e3a8a);color:#fff;padding:18px 24px;border-radius:10px;margin-bottom:16px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:10px">'
+    +'<div><div style="font-size:18px;font-weight:900">REPORTE DE RESULTADOS · SEGURIDAD Y CONVIVENCIA</div>'
+    +'<div style="font-size:12px;color:rgba(255,255,255,.7);margin-top:3px">Alcaldía Local de Engativá · Actividades SYC</div></div>'
+    +'<div style="text-align:right;font-size:11px;color:rgba(255,255,255,.65)">'
+    +'<div>Generado: '+fecha+' '+hora+'</div>'
+    +'<div style="margin-top:2px">Total registros: <strong style="color:#f59e0b;font-size:14px">'+lista.length+'</strong></div></div>'
+    +'</div></div>'
+    +'<div style="background:#eff6ff;border:1.5px solid #93c5fd;border-radius:8px;padding:10px 14px;margin-bottom:12px;font-size:11px;color:#1e40af">'
+    +'<strong>🔍 Filtros / origen:</strong> '+filtrosTexto+'</div>'
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px">'+resumenTema+'</div>'
+    +'<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">'+(totalesChips||'')+'</div>'
+    +'<table style="width:100%;border-collapse:collapse">'
+    +'<thead><tr style="background:linear-gradient(135deg,#1e293b,#1e3a8a);color:#fff">'
+    +'<th style="padding:8px;font-size:10px;text-align:center">#</th>'
+    +'<th style="padding:8px;font-size:10px;text-align:left">Fecha</th>'
+    +'<th style="padding:8px;font-size:10px;text-align:left">Temática</th>'
+    +'<th style="padding:8px;font-size:10px;text-align:left">Actividad</th>'
+    +'<th style="padding:8px;font-size:10px;text-align:left">Responsable</th>'
+    +'<th style="padding:8px;font-size:10px;text-align:left">Lugar</th>'
+    +'<th style="padding:8px;font-size:10px;text-align:left">Barrio / UPZ</th>'
+    +'<th style="padding:8px;font-size:10px;text-align:left">Dirección</th>'
+    +'<th style="padding:8px;font-size:10px;text-align:left">Resultados</th>'
+    +'<th style="padding:8px;font-size:10px;text-align:center">Acta</th>'
+    +'</tr></thead><tbody>'+filas+'</tbody></table>'
+    +'<div style="margin-top:18px;padding-top:10px;border-top:1.5px solid #e2e8f0;display:flex;justify-content:space-between;font-size:10px;color:#94a3b8">'
+    +'<span>SYC Engativá · Sistema de Registro de Actividades</span>'
+    +'<span>'+fecha+' '+hora+'</span></div>'
+    +'<script>window.onload=function(){window.print();}<\/script>'
+    +'</body></html>';
+
+  const win=window.open('','_blank','width=1200,height=800');
+  win.document.write(html);
+  win.document.close();
 }
 
 /* ═══════════ ARRANQUE ═══════════ */
