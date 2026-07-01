@@ -36,6 +36,7 @@ body{font-family:'Inter',sans-serif;background:linear-gradient(135deg,#f8fafc,#e
 .nav-footer{padding:16px;font-size:.68rem;color:var(--muted);line-height:1.7;margin-top:auto}
 .sidebar-conf-btn{display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:10px;margin:2px 8px;cursor:pointer;font-size:.78rem;font-weight:700;color:var(--muted);border:none;background:transparent;width:calc(100% - 16px);text-align:left;font-family:inherit;letter-spacing:.04em;text-transform:uppercase}
 .sidebar-conf-btn:hover{background:#f1f5f9}
+#configPanel .nav-item{padding-left:28px}
 /* MAIN CONTENT */
 .main-content{flex:1;min-width:0;padding-bottom:90px}
 /* HEADER */
@@ -235,20 +236,18 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
       </button>
 
       <div class="nav-divider"></div>
-      <span class="sidebar-label">Datos</span>
-      <button class="nav-item" onclick="exportExcel()">
-        ⬇️ Exportar Excel
+      <button class="sidebar-conf-btn" id="configToggleBtn" onclick="toggleConfigPanel()">
+        <span>⚙ Configuración</span> <span id="configChevron" style="margin-left:auto;transition:transform .2s">▾</span>
       </button>
-      <button class="nav-item" onclick="askPin('Importar Excel','Ingresa el PIN para importar.',()=>document.getElementById('impFile').click())">
-        ⬆️ Importar Excel
-      </button>
-      <input type="file" id="impFile" accept=".xlsx,.xls" style="display:none" onchange="importExcel(this)">
-      <button class="nav-item" style="color:#ef4444" onclick="borrarImportados()">
-        🗑️ Borrar importados
-      </button>
-
-      <div class="nav-divider"></div>
-      <button class="sidebar-conf-btn">⚙ Configuración ▾</button>
+      <div id="configPanel" style="display:none">
+        <button class="nav-item" onclick="askPin('Importar Excel','Ingresa el PIN para importar.',()=>document.getElementById('impFile').click())">
+          ⬆️ Importar Excel
+        </button>
+        <input type="file" id="impFile" accept=".xlsx,.xls" style="display:none" onchange="importExcel(this)">
+        <button class="nav-item" style="color:#ef4444" onclick="borrarImportados()">
+          🗑️ Borrar importados
+        </button>
+      </div>
       <div class="nav-footer">
         SYC · IVC<br>Alcaldía Engativá<br>2026
       </div>
@@ -829,6 +828,20 @@ function buildUI(){
 }
 
 /* ═══════════ NAVEGACIÓN ═══════════ */
+function toggleConfigPanel(){
+  const panel=$('configPanel'), chev=$('configChevron');
+  if(!panel) return;
+  const open = panel.style.display==='block';
+  if(open){
+    panel.style.display='none';
+    if(chev) chev.style.transform='';
+    return;
+  }
+  askPin('Configuración','Ingresa el PIN para acceder a Configuración.',()=>{
+    panel.style.display='block';
+    if(chev) chev.style.transform='rotate(180deg)';
+  });
+}
 function showView(v){
   document.querySelectorAll('.mview').forEach(m=>m.classList.remove('on'));
   document.querySelectorAll('.nav-item').forEach(t=>t.classList.remove('on'));
@@ -1537,20 +1550,6 @@ function renderDash(){
 function setDashTema(t){ dashTema=t; if($('dash-tema-sel'))$('dash-tema-sel').value=t; renderDash(); }
 
 /* ═══════════ EXCEL ═══════════ */
-const XLS_HEADERS=["FECHA DE LA ACTIVIDAD","RESPONSABLE","HORA INICIO","HORA FIN","LUGAR","DIRECCIÓN","MODALIDAD","PROXIMIDAD A UN ENTORNO","TIPO DE ENTORNO","ENTORNO ESCOLAR","NOMBRE DEL PARQUE","UPZ","BARRIO","TEMÁTICA","ACTIVIDAD","NÚMERO DE CLP","TEMÁTICA RECORRIDO","TIPO JORNADA ZONA SEGURA","TALLER ENTORNOS ESCOLARES","TALLER CONVIVENCIA","¿CANCELADA?","RAZÓN CANCELACIÓN","DESARROLLO","OBSERVACIONES","COMPROMISOS","ENTIDADES"].concat(IND_KEYS.map(k=>IND_LABEL[k].toUpperCase())).concat(["OTROS RESULTADOS"]);
-function exportExcel(){
-  const list=applyFilters(Store.list);
-  if(list.length===0){ toast('No hay datos para exportar','err'); return; }
-  const rows=list.map(r=>{ const m=r.meta||{},i=r.ind||{};
-    const base=[fmtDate(m.fecha),m.responsable,m.horaInicio,m.horaFin,m.lugar,m.direccion,m.modalidad,m.proximidad,m.tipoEntorno,m.entornoEscolar,m.nombreParque,m.upz,m.barrio,m.tematica,m.actividad,m.numeroCLP,m.tematicaRecorrido,m.tipoJornadaZS,m.tematicaTallerEE,m.tematicaTallerConv,m.cancelada,m.razonCancelacion,m.desarrollo,m.observaciones,m.compromisos,(m.entidades||[]).join(';')];
-    IND_KEYS.forEach(k=>base.push(Number(i[k])||0)); base.push(i.otrosResultados||'');
-    return base;
-  });
-  const ws=XLSX.utils.aoa_to_sheet([XLS_HEADERS,...rows]);
-  const wb=XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb,ws,'CIERRES');
-  XLSX.writeFile(wb,`Cierre_Seguridad_${new Date().toISOString().slice(0,10)}.xlsx`);
-  toast('Excel exportado ('+rows.length+')','ok');
-}
 function normH(s){ return (s||'').toString().toUpperCase().replace(/\s+/g,' ').replace(/[\n\r]/g,' ').trim(); }
 function borrarImportados(){
   if(!usingFirebase){
