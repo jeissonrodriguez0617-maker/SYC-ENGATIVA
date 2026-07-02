@@ -1220,12 +1220,18 @@ function loadForEdit(k){
   } else $('actividadSel').value=m.actividad||'';
   $('numeroCLP').value=m.numeroCLP||''; $('tematicaRecorrido').value=m.tematicaRecorrido||''; $('tipoJornadaZS').value=m.tipoJornadaZS||'';
   $('tematicaTallerEE').value=m.tematicaTallerEE||''; $('tematicaTallerConv').value=m.tematicaTallerConv||'';
-  $('compromisos').value=m.compromisos||'';
   if($('linkActa')) $('linkActa').value=m.linkActa||'';
   IND_KEYS.forEach(kk=>$(kk).value=Number(ind[kk])||0);
-  const obsParts=[m.desarrollo,m.observaciones,(m.tematica!=='MESAS DE TRABAJO'?m.compromisos:''),ind.otrosResultados]
+  const obsParts=[m.desarrollo,m.observaciones,m.compromisos,ind.otrosResultados]
     .map(v=>(v||'').trim()).filter(Boolean);
-  $('otrosResultados').value=obsParts.join('\n\n');
+  const obsCombined=obsParts.join('\n\n');
+  if(m.tematica==='MESAS DE TRABAJO'){
+    $('compromisos').value=obsCombined;
+    $('otrosResultados').value='';
+  } else {
+    $('compromisos').value='';
+    $('otrosResultados').value=obsCombined;
+  }
   updateConds();
   $('btnSave').textContent='💾 Actualizar'; $('btnCancelEdit').style.display='inline-flex';
   showView('form'); window.scrollTo(0,0); toast('Editando actividad','ok');
