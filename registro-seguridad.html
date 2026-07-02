@@ -204,6 +204,11 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
 .rec-acta{display:inline-flex;align-items:center;gap:4px;font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:999px;background:#f0fdf4;color:#166534;border:1px solid #86efac;text-decoration:none;cursor:pointer}
 .rec-acta:hover{background:#dcfce7}
 .rec-sin-acta{display:inline-flex;align-items:center;gap:4px;font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:999px;background:#fff7ed;color:#92400e;border:1px solid #fed7aa}
+.rec-acta-fisica{display:inline-flex;align-items:center;gap:4px;font-size:.65rem;font-weight:700;padding:3px 10px;border-radius:999px;border:1.5px solid;cursor:pointer;transition:all .15s;font-family:inherit}
+.rec-acta-fisica.pendiente{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
+.rec-acta-fisica.pendiente:hover{background:#fecaca}
+.rec-acta-fisica.entregada{background:#dcfce7;color:#166534;border-color:#86efac}
+.rec-acta-fisica.entregada:hover{background:#bbf7d0}
 
 </style>
 </head>
@@ -426,11 +431,14 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
 
       </div>
 
-      <!-- S4 COMPROMISOS (solo mesas de trabajo) -->
+      <!-- S4 COMPROMISOS (mesas de trabajo) / OBSERVACIONES (todo lo demás) -->
       <div class="sp" id="s4">
-        <div class="stitle">04 · Compromisos</div>
-        <div class="card">
+        <div class="stitle" id="s4title">04 · Compromisos</div>
+        <div class="card" id="cardCompromisos">
           <div class="f"><label>Compromisos adquiridos</label><textarea id="compromisos" placeholder="Compromisos (si aplica)"></textarea></div>
+        </div>
+        <div class="card" id="cardObservaciones" style="display:none">
+          <div class="f"><label>Observaciones</label><textarea id="otrosResultados" placeholder="Observaciones (si aplica)"></textarea></div>
         </div>
       </div>
 
@@ -439,9 +447,6 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
         <div class="stitle">05 · Indicadores y resultados</div>
         <div class="hint" id="indHint" style="margin-bottom:12px">Deja en 0 lo que no aplique. Estos valores alimentan el Resumen.</div>
         <div id="indContainer"></div>
-        <div class="card" id="otrosCard">
-          <div class="f"><label>Otros resultados</label><textarea id="otrosResultados" placeholder="0 si no aplica"></textarea></div>
-        </div>
       </div>
 
       <!-- S6 ACTA -->
@@ -934,7 +939,11 @@ function updateConds(){
   show('condZonaSegura', au.includes('ZONA') && au.includes('SEGURA'));
   show('condTallerEE', au.includes('TALLER') && t==='ENTORNOS ESCOLARES');
   show('condTallerConv', au.includes('TALLER') && t==='CONVIVENCIA');
-  $('s4').style.display = (t==='MESAS DE TRABAJO') ? 'block' : 'none';
+  const esMesa = t==='MESAS DE TRABAJO';
+  $('s4').style.display = t ? 'block' : 'none';
+  $('s4title').textContent = esMesa ? '04 · Compromisos' : '04 · Observaciones';
+  $('cardCompromisos').style.display = esMesa ? 'block' : 'none';
+  $('cardObservaciones').style.display = esMesa ? 'none' : 'block';
   updateIndVisibility();
 }
 
@@ -963,17 +972,15 @@ function visibleGroups(){
 }
 function updateIndVisibility(){
   const groups=visibleGroups();
-  const s5=$('s5'), hint=$('indHint'), otros=$('otrosCard');
+  const s5=$('s5'), hint=$('indHint');
   if(groups===null){
     s5.style.display='block'; hint.style.display='block';
     hint.textContent='Selecciona una temática y una actividad para ver los indicadores relacionados.';
     IND_GROUPS.forEach(g=>{const c=$('indgrp-'+g.id); if(c)c.style.display='none';});
-    if(otros) otros.style.display='none';
     return;
   }
   if(groups.length===0){ s5.style.display='none'; return; }
   s5.style.display='block'; hint.style.display='none';
-  if(otros) otros.style.display='block';
   IND_GROUPS.forEach(g=>{
     const c=$('indgrp-'+g.id); if(!c)return;
     const on=groups.includes(g.id);
@@ -1024,6 +1031,7 @@ function collect(){
     compromisos: (t==='MESAS DE TRABAJO') ? $('compromisos').value.trim() : '',
     entidades:[],
     linkActa:$('linkActa')?$('linkActa').value.trim():'',
+    actaFisica: editKey&&Store.map[editKey]?(!!Store.map[editKey].meta.actaFisica):false,
     creado: editKey&&Store.map[editKey]?(Store.map[editKey].meta.creado||Date.now()):Date.now(),
     actualizado: Date.now()
   };
@@ -1123,6 +1131,7 @@ function renderRecs(){
     const actaBadge=acta
       ? `<a class="rec-acta" href="${acta}" target="_blank" onclick="event.stopPropagation()">🔗 Ver acta</a>`
       : `<span class="rec-sin-acta">⚠️ Sin acta</span>`;
+    const actaFisicaBtn=`<button type="button" class="rec-acta-fisica ${m.actaFisica?'entregada':'pendiente'}" onclick="event.stopPropagation();toggleActaFisica('${r._k}')">${m.actaFisica?'✅ Acta física entregada':'⏳ Pendiente por entregar acta física'}</button>`;
     return `<div class="rec" onclick="openDet('${r._k}')">
       <div class="rec-num">${list.length - idx}</div>
       <div class="rec-body">
@@ -1137,10 +1146,19 @@ function renderRecs(){
           <span class="bdg">${m.modalidad||''}</span>
           ${total>0?`<span class="bdg">${total} ind.</span>`:''}
           ${actaBadge}
+          ${actaFisicaBtn}
         </div>
       </div>
     </div>`;
   }).join('');
+}
+function toggleActaFisica(k){
+  const r=Store.map[k]; if(!r) return;
+  const m=Object.assign({},r.meta||{});
+  m.actaFisica=!m.actaFisica;
+  Store.update(k,{meta:m,ind:r.ind||{}}).then(()=>{
+    toast(m.actaFisica?'Acta física marcada como entregada':'Acta física marcada como pendiente','ok');
+  }).catch(e=>{ console.error(e); toast('Error al actualizar','err'); });
 }
 function toggleFil(){ $('filPanel').classList.toggle('on'); }
 function clearFil(){
@@ -1159,6 +1177,9 @@ function openDet(k){
     return `<div style="font-weight:700;font-size:.72rem;color:var(--${g.id});margin:8px 0 3px">${g.icon} ${g.title}</div>`+
       rows.map(it=>`<div style="font-size:.8rem;display:flex;justify-content:space-between"><span>${it[1]}</span><b>${ind[it[0]]}</b></div>`).join('');
   }).join('');
+  const obsParts=[m.desarrollo,m.observaciones,m.compromisos,(ind.otrosResultados&&ind.otrosResultados!=='0'?ind.otrosResultados:'')]
+    .map(v=>(v||'').trim()).filter(Boolean);
+  const obsCombined=obsParts.join('\n\n');
   $('detBody').innerHTML=`
     <h3>${m.actividad||'(sin actividad)'}</h3>
     <p style="margin-bottom:10px">${m.tematica||''} · ${m.modalidad||''} ${m.cancelada==='SI'?'· <b style="color:#991b1b">CANCELADA</b>':''}</p>
@@ -1171,12 +1192,8 @@ function openDet(k){
       ${m.entidades&&m.entidades.length?`<div>🤝 ${m.entidades.join(', ')}</div>`:''}
       ${m.linkActa?`<div>🔗 <a href="${m.linkActa}" target="_blank" style="color:var(--primary);font-weight:700">Ver acta cargada</a></div>`:''}
     </div>
-    ${m.desarrollo?`<div style="margin-top:10px"><label>Desarrollo</label><div style="font-size:.8rem;white-space:pre-wrap;margin-top:3px">${m.desarrollo}</div></div>`:''}
-    ${m.observaciones?`<div style="margin-top:8px"><label>Observaciones</label><div style="font-size:.8rem;white-space:pre-wrap;margin-top:3px">${m.observaciones}</div></div>`:''}
-    ${m.compromisos?`<div style="margin-top:8px"><label>Compromisos</label><div style="font-size:.8rem;white-space:pre-wrap;margin-top:3px">${m.compromisos}</div></div>`:''}
-
     ${indRows?`<div style="margin-top:10px"><label>Indicadores</label>${indRows}</div>`:''}
-    ${ind.otrosResultados&&ind.otrosResultados!=='0'?`<div style="margin-top:8px"><label>Otros resultados</label><div style="font-size:.8rem">${ind.otrosResultados}</div></div>`:''}
+    ${obsCombined?`<div style="margin-top:8px"><label>04 · Observaciones</label><div style="font-size:.8rem;white-space:pre-wrap;margin-top:3px">${obsCombined}</div></div>`:''}
   `;
   $('detEdit').onclick=()=>{ closeDet(); loadForEdit(k); };
   $('detDel').onclick=()=>{ askPin('Eliminar actividad','Esta acción no se puede deshacer. Ingresa el PIN.',()=>{ Store.remove(k).then(()=>{ closeDet(); toast('Actividad eliminada','ok'); }); }); };
@@ -1205,7 +1222,10 @@ function loadForEdit(k){
   $('tematicaTallerEE').value=m.tematicaTallerEE||''; $('tematicaTallerConv').value=m.tematicaTallerConv||'';
   $('compromisos').value=m.compromisos||'';
   if($('linkActa')) $('linkActa').value=m.linkActa||'';
-  IND_KEYS.forEach(kk=>$(kk).value=Number(ind[kk])||0); $('otrosResultados').value=ind.otrosResultados||'';
+  IND_KEYS.forEach(kk=>$(kk).value=Number(ind[kk])||0);
+  const obsParts=[m.desarrollo,m.observaciones,(m.tematica!=='MESAS DE TRABAJO'?m.compromisos:''),ind.otrosResultados]
+    .map(v=>(v||'').trim()).filter(Boolean);
+  $('otrosResultados').value=obsParts.join('\n\n');
   updateConds();
   $('btnSave').textContent='💾 Actualizar'; $('btnCancelEdit').style.display='inline-flex';
   showView('form'); window.scrollTo(0,0); toast('Editando actividad','ok');
@@ -1659,12 +1679,15 @@ function genActaPdf(r){
   if(m.proximidad==='SI') line('Entorno:',(m.tipoEntorno||'')+' '+(m.entornoEscolar||m.nombreParque||''));
   line('Entidades:',(m.entidades||[]).join(', '));
   if(m.cancelada==='SI'){ line('CANCELADA:',m.razonCancelacion||'Sí'); }
-  y+=6; doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.text('Desarrollo de la actividad',L,y); y+=14;
-  doc.setFont('helvetica','normal'); doc.setFontSize(9);
-  const dev=doc.splitTextToSize(m.desarrollo||'—',W); doc.text(dev,L,y); y+=dev.length*11+8;
-  if(y>700){doc.addPage();y=54;}
-  if(m.observaciones){ doc.setFont('helvetica','bold');doc.text('Observaciones',L,y);y+=13; doc.setFont('helvetica','normal'); const o=doc.splitTextToSize(m.observaciones,W); doc.text(o,L,y); y+=o.length*11+6; }
-  if(m.compromisos){ doc.setFont('helvetica','bold');doc.text('Compromisos',L,y);y+=13; doc.setFont('helvetica','normal'); const c=doc.splitTextToSize(m.compromisos,W); doc.text(c,L,y); y+=c.length*11+6; }
+  y+=6;
+  const obsPartsPdf=[m.desarrollo,m.observaciones,m.compromisos,(ind.otrosResultados&&ind.otrosResultados!=='0'?ind.otrosResultados:'')]
+    .map(v=>(v||'').trim()).filter(Boolean);
+  if(obsPartsPdf.length){
+    doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.text('04 · Observaciones',L,y); y+=14;
+    doc.setFont('helvetica','normal'); doc.setFontSize(9);
+    const ot=doc.splitTextToSize(obsPartsPdf.join('\n\n'),W); doc.text(ot,L,y); y+=ot.length*11+8;
+    if(y>700){doc.addPage();y=54;}
+  }
   // indicadores
   const indHas=IND_KEYS.filter(k=>(Number(ind[k])||0)>0);
   if(indHas.length){ if(y>650){doc.addPage();y=54;} doc.setFont('helvetica','bold'); doc.setFontSize(10); doc.text('Indicadores',L,y); y+=14; doc.setFontSize(9);
@@ -1768,6 +1791,8 @@ function reporteRenderLista(){
     const key=reporteGetKey(r); const sel=_reporteSeleccionados.has(key);
     const tc=TEMA_COLORS[m.tematica]||{bg:'#eff6ff',fg:'#1e3a8a'};
     const chips=_rptIndChips(ind);
+    const obsPrev=[m.desarrollo,m.observaciones,m.compromisos,(ind.otrosResultados&&ind.otrosResultados!=='0'?ind.otrosResultados:'')]
+      .map(v=>(v||'').trim()).filter(Boolean).join(' · ');
     const acta=m.linkActa&&m.linkActa.trim();
     const actaLbl=acta?'<span style="color:#10b981;font-size:11px;font-weight:700">📎 Con acta</span>':'<span style="color:#94a3b8;font-size:11px">Sin acta</span>';
     return `<div onclick="reporteToggle('${key.replace(/'/g,"\\'")}')" data-key="${key.replace(/"/g,'&quot;')}"
@@ -1786,7 +1811,7 @@ function reporteRenderLista(){
         <div style="font-size:12px;color:#1e40af;font-weight:600">${m.direccion||m.lugar||'—'}</div>
         <div style="font-size:11px;color:#94a3b8">${m.barrio||''}${m.upz?' · '+m.upz:''}${m.responsable?' · 👤 '+m.responsable:''}</div>
         ${chips.length?`<div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:5px">${chips.map(c=>`<span style="padding:1px 6px;background:#eff6ff;color:#1e40af;border:1px solid #bfdbfe;border-radius:4px;font-size:10px;font-weight:700">${c}</span>`).join('')}</div>`:''}
-        ${(!chips.length && m.compromisos)?`<div style="font-size:11px;color:#475569;margin-top:4px"><b>Compromisos:</b> ${m.compromisos}</div>`:''}
+        ${(!chips.length && obsPrev)?`<div style="font-size:11px;color:#475569;margin-top:4px"><b>Observaciones:</b> ${obsPrev}</div>`:''}
       </div>
     </div>`;
   }).join('');
@@ -1862,7 +1887,9 @@ function generarPDFReporteSeg(lista,filtrosTexto){
   const filas=lista.map((r,i)=>{
     const m=r.meta||{}, ind=r.ind||{};
     const tc=TEMA_COLORS[m.tematica]||{bg:'#f1f5f9',fg:'#334155'};
-    const chips=_rptIndChips(ind).join(' · ')||(m.compromisos?('Compromisos: '+m.compromisos):'—');
+    const obsPrevPdf=[m.desarrollo,m.observaciones,m.compromisos,(ind.otrosResultados&&ind.otrosResultados!=='0'?ind.otrosResultados:'')]
+      .map(v=>(v||'').trim()).filter(Boolean).join(' · ');
+    const chips=_rptIndChips(ind).join(' · ')||(obsPrevPdf?('Observaciones: '+obsPrevPdf):'—');
     const actaIcon=(m.linkActa&&m.linkActa.trim())
       ?'<a href="'+m.linkActa+'" style="color:#1d4ed8;font-size:10px">📎 Ver acta</a>'
       :'<span style="color:#94a3b8;font-size:10px">—</span>';
