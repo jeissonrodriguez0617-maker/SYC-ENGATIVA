@@ -252,6 +252,9 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
         <button class="nav-item" style="color:#ef4444" onclick="borrarImportados()">
           🗑️ Borrar importados
         </button>
+        <button class="nav-item" style="color:#f59e0b" onclick="quitarDuplicados()">
+          🧹 Quitar duplicados
+        </button>
       </div>
       <div class="nav-footer">
         SYC · IVC<br>Alcaldía Engativá<br>2026
@@ -952,23 +955,7 @@ function visibleGroups(){
   const t=$('tematica').value;
   if(!t) return null;                       // nada seleccionado
   if(t==='MESAS DE TRABAJO') return [];     // las mesas no registran indicadores operativos
-  const a=((t==='OTRO')?$('actividadOtro').value:$('actividadSel').value)||'';
-  const A=a.toUpperCase();
-  if(t==='OTRO') return ['c1','c2','c3','c4','c5','c6'];
-  if(t==='SEGURIDAD'){
-    if(A.includes('MEGATOMA')) return ['c1','c2','c3','c4','c5','c6'];
-    if(A.includes('MARCACI')) return ['c6'];
-    if(A.includes('BICIRRECORRIDO')) return ['c1','c4','c6'];
-    return ['c1','c3','c5'];                 // plan baliza, patrullaje, plan guitarra, recorrido seguridad
-  }
-  if(t==='CONVIVENCIA'){
-    if(A.includes('ABORDAJE')) return ['c2','c4','c5'];
-    if(A.includes('RESIDUOS')) return ['c4'];
-    return ['c5'];                           // aglomeraciones, zonas seguras, talleres
-  }
-  if(t==='ENTORNOS ESCOLARES') return ['c5'];
-  if(t==='DD.HH.') return ['c5'];
-  return ['c5'];
+  return ['c1','c2','c3','c4','c5','c6'];   // todos los grupos de resultados/indicadores, para cualquier temática/actividad
 }
 function updateIndVisibility(){
   const groups=visibleGroups();
@@ -1600,6 +1587,72 @@ function borrarImportados(){
       });
     });
   });
+}
+
+/* ═══════════ QUITAR DUPLICADOS ═══════════ */
+function _dupFirma(r){
+  const m = r.meta||{};
+  return [
+    (m.fecha||'').trim(),
+    (m.responsable||'').trim().toUpperCase(),
+    (m.direccion||m.lugar||'').trim().toUpperCase(),
+    (m.actividad||'').trim().toUpperCase(),
+    (m.horaInicio||'').trim(),
+    (m.tematica||'').trim().toUpperCase()
+  ].join('|');
+}
+function _dupCompletitud(r){
+  const m = r.meta||{}, ind = r.ind||{};
+  let score = 0;
+  ['desarrollo','observaciones','compromisos','direccion','lugar','horaFin'].forEach(k=>{ if((m[k]||'').toString().trim()) score++; });
+  Object.keys(ind).forEach(k=>{ if(Number(ind[k])>0) score++; });
+  return score;
+}
+function _dupEncontrar(){
+  const grupos = {};
+  Store.list.forEach(r=>{
+    const f = _dupFirma(r);
+    if(!f.replace(/\|/g,'').trim()) return; // ignora registros sin datos clave
+    (grupos[f] = grupos[f]||[]).push(r);
+  });
+  const aBorrar = [];
+  let gruposConDup = 0;
+  Object.values(grupos).forEach(list=>{
+    if(list.length<2) return;
+    gruposConDup++;
+    // ordena: mayor completitud primero, luego el más antiguo (creado) primero -> el primero se conserva
+    list.sort((a,b)=>{
+      const c = _dupCompletitud(b)-_dupCompletitud(a);
+      if(c!==0) return c;
+      return (a.meta?.creado||0)-(b.meta?.creado||0);
+    });
+    list.slice(1).forEach(r=>aBorrar.push(r._k));
+  });
+  return {aBorrar, gruposConDup};
+}
+function quitarDuplicados(){
+  const {aBorrar, gruposConDup} = _dupEncontrar();
+  if(!aBorrar.length){ toast('No se encontraron registros duplicados',''); return; }
+  const ejecutar = ()=>{
+    if(usingFirebase){
+      const updates = {}; aBorrar.forEach(k=>{ updates[k]=null; });
+      ref.update(updates).then(()=>{
+        toast(`${aBorrar.length} duplicado(s) eliminado(s) de ${gruposConDup} grupo(s)`,'ok');
+        renderRecs();
+      });
+    } else {
+      aBorrar.forEach(k=>{ delete Store.map[k]; });
+      Store._saveLocal(); Store._loadLocal(); Store._cb();
+      toast(`${aBorrar.length} duplicado(s) eliminado(s) de ${gruposConDup} grupo(s)`,'ok');
+      renderRecs();
+    }
+  };
+  const msg = `Se encontraron ${aBorrar.length} registro(s) duplicado(s) en ${gruposConDup} grupo(s) (misma fecha, responsable, dirección, actividad y hora de inicio). Se conservará el más completo de cada grupo y se eliminarán los demás. Esta acción no se puede deshacer.`;
+  if(usingFirebase){
+    askPin('Quitar duplicados', msg+' Ingresa el PIN para continuar.', ejecutar);
+  } else {
+    if(confirm(msg)) ejecutar();
+  }
 }
 
 function importExcel(input){
