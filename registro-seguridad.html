@@ -404,6 +404,10 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
             <div class="f"><label>Actividad <span class="req">*</span></label>
               <select id="actividadSel" data-lbl="Actividad" data-sec="s3" onchange="updateConds()"><option value="">Selecciona temática primero</option></select></div>
           </div>
+          <div class="cond" id="condActSelOtro" style="margin-top:12px">
+            <div class="f"><label>Describe la actividad <span class="req">*</span></label>
+              <input type="text" id="actividadSelOtro" data-sec="s3" placeholder="Escribe la actividad" oninput="updateConds()"></div>
+          </div>
           <div class="cond" id="condActOtro" style="margin-top:12px">
             <div class="f"><label>Describe la actividad <span class="req">*</span></label>
               <select id="actividadOtro" data-lbl="Actividad (otro)" data-sec="s3" onchange="updateConds()"><option value="">—</option><option>OPERATIVOS IVC</option><option>ACOMPAÑAMIENTO PROCESO CLP</option><option>DESPACHOS COMISORIOS</option><option>CLP 885 - 2024</option><option>CLP 615 - 2025</option></select></div>
@@ -915,8 +919,8 @@ function onUpzChange(){
 function onTemaChange(){
   const t=$('tematica').value;
   const sel=$('actividadSel');
-  if(ACT[t]){ sel.innerHTML='<option value="">—</option>'+ACT[t].map(a=>`<option>${a}</option>`).join(''); }
-  else sel.innerHTML='<option value="">—</option>';
+  if(ACT[t]){ sel.innerHTML='<option value="">—</option>'+ACT[t].map(a=>`<option>${a}</option>`).join('')+'<option>OTRO</option>'; }
+  else sel.innerHTML='<option value="">—</option><option>OTRO</option>';
   updateConds();
 }
 
@@ -935,7 +939,8 @@ function updateConds(){
   const t=$('tematica').value;
   show('condActSel', t && t!=='OTRO');
   show('condActOtro', t==='OTRO');
-  const a = (t==='OTRO') ? $('actividadOtro').value : $('actividadSel').value;
+  show('condActSelOtro', t && t!=='OTRO' && $('actividadSel').value==='OTRO');
+  const a = (t==='OTRO') ? $('actividadOtro').value : ($('actividadSel').value==='OTRO' ? $('actividadSelOtro').value : $('actividadSel').value);
   const au=(a||'').toUpperCase();
   show('condCLP', au.includes('CONTROL POLÍTICO') || au.includes('CONTROL POLITICO'));
   show('condRecorrido', au.includes('ABORDAJE') || au.includes('RECORRIDOS DE ABORDAJE'));
@@ -991,7 +996,10 @@ function reqVisible(){
   if($('barrio').value==='OTRO') r.push({id:'barrioOtro',sec:'s2',lbl:'Nombre del barrio (otro)'});
   const t=$('tematica').value;
   if(t==='OTRO') r.push({id:'actividadOtro',sec:'s3',lbl:'Actividad (describir)'});
-  else if(t) r.push({id:'actividadSel',sec:'s3',lbl:'Actividad'});
+  else if(t){
+    r.push({id:'actividadSel',sec:'s3',lbl:'Actividad'});
+    if($('actividadSel').value==='OTRO') r.push({id:'actividadSelOtro',sec:'s3',lbl:'Describe la actividad'});
+  }
   return r;
 }
 function validate(){
@@ -1003,7 +1011,7 @@ function validate(){
 
 function collect(){
   const t=$('tematica').value;
-  const actividad = (t==='OTRO') ? $('actividadOtro').value.trim() : $('actividadSel').value;
+  const actividad = (t==='OTRO') ? $('actividadOtro').value.trim() : ($('actividadSel').value==='OTRO' ? $('actividadSelOtro').value.trim() : $('actividadSel').value);
   const meta={
     responsable:$('responsable').value.trim(), fecha:$('fecha').value,
     horaInicio:$('horaInicio').value, horaFin:$('horaFin').value,
@@ -1046,7 +1054,7 @@ function saveRec(){
 
 function resetForm(toRecs){
   editKey=null; selEnt.clear(); dirManual=false;
-  ['responsable','lugar','dir','abN1','abL1','abN2','abL2','abN3','entornoEscolar','nombreParque','barrioOtro','actividadOtro','numeroCLP','tematicaTallerEE','tematicaTallerConv','compromisos','otrosResultados','linkActa'].forEach(id=>{const e=$(id); if(e)e.value='';});
+  ['responsable','lugar','dir','abN1','abL1','abN2','abL2','abN3','entornoEscolar','nombreParque','barrioOtro','actividadOtro','actividadSelOtro','numeroCLP','tematicaTallerEE','tematicaTallerConv','compromisos','otrosResultados','linkActa'].forEach(id=>{const e=$(id); if(e)e.value='';});
   ['upz','barrio','tipoEntorno','tematica','actividadSel','tematicaRecorrido','tipoJornadaZS','horaInicio','horaFin'].forEach(id=>{const e=$(id); if(e)e.value='';});
   $('fecha').value=new Date().toISOString().split('T')[0];
   $('proximidad').value='';
@@ -1204,7 +1212,13 @@ function loadForEdit(k){
     const selO=$('actividadOtro');
     if(m.actividad && ![...selO.options].some(o=>o.value===m.actividad)){ const op=document.createElement('option'); op.value=m.actividad; op.textContent=m.actividad; selO.appendChild(op); }
     selO.value=m.actividad||'';
-  } else $('actividadSel').value=m.actividad||'';
+  } else if(m.actividad && ACT[m.tematica] && ACT[m.tematica].includes(m.actividad)){
+    $('actividadSel').value=m.actividad;
+  } else if(m.actividad){
+    $('actividadSel').value='OTRO'; $('actividadSelOtro').value=m.actividad;
+  } else {
+    $('actividadSel').value='';
+  }
   $('numeroCLP').value=m.numeroCLP||''; $('tematicaRecorrido').value=m.tematicaRecorrido||''; $('tipoJornadaZS').value=m.tipoJornadaZS||'';
   $('tematicaTallerEE').value=m.tematicaTallerEE||''; $('tematicaTallerConv').value=m.tematicaTallerConv||'';
   if($('linkActa')) $('linkActa').value=m.linkActa||'';
