@@ -211,6 +211,21 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
 .rec-acta-fisica.entregada{background:#dcfce7;color:#166534;border-color:#86efac}
 .rec-acta-fisica.entregada:hover{background:#bbf7d0}
 
+/* ADMIN DATOS */
+.adm-tabs{display:flex;gap:6px}
+.adm-tab{font-family:inherit;font-size:.78rem;font-weight:700;padding:8px 14px;border-radius:8px 8px 0 0;border:1.5px solid var(--border);border-bottom:none;background:#f1f5f9;color:var(--muted);cursor:pointer}
+.adm-tab.on{background:var(--primary);border-color:var(--primary);color:#fff}
+.adm-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.adm-bar .grow{flex:1;min-width:140px}
+.adm-row{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.adm-row input{flex:1;font-size:.78rem;padding:7px 10px}
+.adm-cnt{font-size:.65rem;font-weight:700;color:var(--muted);background:#f1f5f9;border-radius:999px;padding:3px 9px;white-space:nowrap}
+.adm-ico{font-family:inherit;border:1.5px solid var(--border);background:#fff;border-radius:8px;padding:6px 9px;cursor:pointer;font-size:.8rem;line-height:1}
+.adm-ico:hover{background:#f1f5f9}
+.adm-ico.danger:hover{background:#fee2e2;border-color:#fca5a5}
+.adm-note{font-size:.7rem;color:#92400e;background:#fef3c7;border:1px solid #fcd34d;border-radius:8px;padding:8px 10px;margin-bottom:10px;line-height:1.5}
+.adm-sub{font-size:.68rem;color:var(--muted);margin:2px 0 10px}
+
 </style>
 </head>
 <body>
@@ -239,6 +254,10 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
       </button>
       <button class="nav-item" data-view="reporte" onclick="showView('reporte')">
         📄 Reporte PDF
+      </button>
+
+      <button class="nav-item" onclick="askPin('Administrar datos','Ingresa el PIN para administrar contratistas y tipos de actividad.',openAdm)">
+        🛠️ Administrar datos
       </button>
 
       <div class="nav-divider"></div>
@@ -580,6 +599,7 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
           <button onclick="reporteSeleccionarTodos()" style="padding:7px 14px;background:#eff6ff;color:#1e40af;border:1.5px solid #93c5fd;border-radius:8px;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer">☑ Seleccionar todos</button>
           <button onclick="reporteDeseleccionarTodos()" style="padding:7px 14px;background:#f1f5f9;color:#64748b;border:1.5px solid #e2e8f0;border-radius:8px;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:700;cursor:pointer">☐ Deseleccionar</button>
           <button id="btn-descargar-reporte" onclick="reporteDescargarPDF()" disabled style="padding:7px 18px;background:#94a3b8;color:#fff;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:700;cursor:not-allowed;display:flex;align-items:center;gap:6px;transition:all .2s">📄 Descargar PDF <span id="reporte-sel-cnt" style="background:rgba(255,255,255,.25);padding:1px 7px;border-radius:999px">0</span></button>
+          <button id="btn-descargar-excel" onclick="reporteDescargarExcel()" disabled style="padding:7px 18px;background:#94a3b8;color:#fff;border:none;border-radius:8px;font-family:'Inter',sans-serif;font-size:.75rem;font-weight:700;cursor:not-allowed;display:flex;align-items:center;gap:6px;transition:all .2s">📊 Descargar Excel <span id="reporte-excel-cnt" style="background:rgba(255,255,255,.25);padding:1px 7px;border-radius:999px">0</span></button>
         </div>
       </div>
 
@@ -668,6 +688,54 @@ textarea{resize:vertical;min-height:80px;line-height:1.5}
   </div>
 </div>
 
+<!-- MODAL ADMINISTRAR DATOS -->
+<div class="ov" id="ovAdm">
+  <div class="mdl" style="max-width:660px;max-height:90vh;display:flex;flex-direction:column;padding:0;overflow:hidden">
+    <div style="padding:18px 22px 0;border-bottom:1.5px solid var(--primary)">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:10px">
+        <h3 style="margin:0">🛠️ Administrar datos</h3>
+        <button class="btn btn-ghost btn-sm" onclick="closeAdm()">✕ Cerrar</button>
+      </div>
+      <p style="margin:4px 0 12px;font-size:.74rem">Los cambios se guardan al instante y se aplican a todos los usuarios.</p>
+      <div class="adm-tabs">
+        <button class="adm-tab on" id="admTabResp" onclick="admTab('resp')">👷 Contratistas</button>
+        <button class="adm-tab" id="admTabAct" onclick="admTab('act')">📋 Tipos de actividad</button>
+      </div>
+    </div>
+    <div style="padding:16px 22px;overflow:auto;flex:1">
+
+      <div id="admPaneResp">
+        <div class="adm-bar">
+          <input type="text" id="admRespQ" class="grow" placeholder="🔍 Buscar contratista…" oninput="admRender()">
+          <button class="btn btn-ghost btn-sm" onclick="admRespSort()">A→Z Ordenar</button>
+          <button class="btn btn-ghost btn-sm" onclick="admRestore()">↺ Restaurar originales</button>
+        </div>
+        <div class="adm-bar">
+          <input type="text" id="admNewResp" class="grow" placeholder="Nuevo contratista (nombre completo)" onkeydown="if(event.key==='Enter')admRespAdd()">
+          <button class="btn btn-pri btn-sm" onclick="admRespAdd()">＋ Agregar</button>
+        </div>
+        <div class="adm-sub" id="admRespCount"></div>
+        <div id="admRespList"></div>
+      </div>
+
+      <div id="admPaneAct" style="display:none">
+        <div class="adm-bar">
+          <div class="f grow"><label>Temática</label><select id="admTema" onchange="admRender()"></select></div>
+          <button class="btn btn-ghost btn-sm" style="align-self:flex-end" onclick="admRestore()">↺ Restaurar originales</button>
+        </div>
+        <div class="adm-note">Los campos adicionales del formulario (número de CLP, abordaje, zona segura, talleres) se activan por palabras del nombre: <b>CONTROL POLÍTICO</b>, <b>ABORDAJE</b>, <b>ZONA SEGURA</b>, <b>TALLER</b>. Si renombras una actividad, conserva esas palabras.</div>
+        <div class="adm-bar">
+          <input type="text" id="admNewAct" class="grow" placeholder="Nueva actividad" onkeydown="if(event.key==='Enter')admActAdd()">
+          <button class="btn btn-pri btn-sm" onclick="admActAdd()">＋ Agregar</button>
+        </div>
+        <div class="adm-sub" id="admActCount"></div>
+        <div id="admActList"></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
 <!-- MODAL DETALLE -->
 <div class="ov" id="ovDet">
   <div class="mdl" style="max-width:560px;max-height:85vh;overflow:auto">
@@ -721,6 +789,197 @@ const ACT = {
   "DD.HH.":["ACOMPAÑAMIENTO A MANIFESTACIONES","JORNADA DE DD.HH.","SOCIALIZACION RUTAS DE ATENCION"],
   "MESAS DE TRABAJO":["MESA DE CONTROL POLÍTICO","ENCUENTRO COMUNITARIO PONAL","MESA DE TRABAJO CON COLEGIOS","MESA TÉCNICA DE ENTORNOS ESCOLARES","CONSEJO LOCAL DE SEGURIDAD","COMITÉ CIVIL DE CONVIVENCIA LOCAL","JUNTA ZONAL DE SEGURIDAD","MESA DE TRABAJO - ARTICULACIÓN INTERINSTITUCIONAL","CONSEJO LOCAL DE JUSTICIA TRANSICIONAL","CONSEJO LOCAL DE PAZ","COMITÉ LOCAL DE DERECHOS HUMANOS","CONSEJO LOCAL DE SEGURIDAD PARA LAS MUJERES","CONSEJO LOCAL DE BARRAS","CONSEJO LOCAL DE MUJER Y EQUIDAD DE GÉNERO"]
 };
+
+/* ═══════════ CONFIGURACIÓN EDITABLE (contratistas y tipos de actividad) ═══════════ */
+const CFG_NODO = 'configuracion_syc';
+const CFG_LS = 'cfg_' + CFG_NODO;
+const ACT_OTRO = ["OPERATIVOS IVC","ACOMPAÑAMIENTO PROCESO CLP","DESPACHOS COMISORIOS","CLP 885 - 2024","CLP 615 - 2025"];
+const DEF_RESP = RESPONSABLES.slice();
+const DEF_ACT = JSON.parse(JSON.stringify(ACT));
+const DEF_OTRO = ACT_OTRO.slice();
+const TEMA_KEY = {"SEGURIDAD":"seguridad","CONVIVENCIA":"convivencia","ENTORNOS ESCOLARES":"entornos","DD.HH.":"ddhh","MESAS DE TRABAJO":"mesas","OTRO":"otro"}; // sin puntos: Firebase no los admite en claves
+
+function applyCfg(cfg){
+  RESPONSABLES.length = 0; ACT_OTRO.length = 0;
+  if(!cfg){
+    DEF_RESP.forEach(x=>RESPONSABLES.push(x));
+    Object.keys(DEF_ACT).forEach(t=>{ ACT[t] = DEF_ACT[t].slice(); });
+    DEF_OTRO.forEach(x=>ACT_OTRO.push(x));
+    return;
+  }
+  const vals = o => o ? Object.values(o).filter(x=>typeof x==='string' && x.trim()) : [];
+  vals(cfg.responsables).forEach(x=>RESPONSABLES.push(x));
+  Object.keys(DEF_ACT).forEach(t=>{ ACT[t] = vals((cfg.act||{})[TEMA_KEY[t]]); });
+  vals((cfg.act||{})[TEMA_KEY['OTRO']]).forEach(x=>ACT_OTRO.push(x));
+}
+function refreshListsUI(){
+  if(!document.getElementById('dlResp')) return;
+  fillDatalist($('dlResp'), RESPONSABLES);
+  const so=$('actividadOtro'); if(so){
+    const cur=so.value;
+    so.innerHTML='<option value="">—</option>'+ACT_OTRO.map(a=>`<option>${a}</option>`).join('');
+    if(cur && ![...so.options].some(o=>o.value===cur)){ const op=document.createElement('option'); op.value=cur; op.textContent=cur; so.appendChild(op); }
+    so.value=cur;
+  }
+  const sel=$('actividadSel');
+  if(sel){ const cur=sel.value; onTemaChange(); if(cur && [...sel.options].some(o=>o.value===cur)) sel.value=cur; updateConds(); }
+  const fa=$('fActividad');
+  if(fa && $('fTema').value){ const cur=fa.value; const t=$('fTema').value; if(ACT[t]){ fa.innerHTML='<option value="">Todas</option>'+ACT[t].map(a=>`<option>${a}</option>`).join(''); fa.value=cur; } }
+}
+const Cfg = {
+  last:null,
+  init(){
+    if(usingFirebase){
+      db.ref(CFG_NODO).on('value', snap=>{
+        Cfg.last = snap.exists() ? snap.val() : null;
+        applyCfg(Cfg.last); refreshListsUI();
+        if($('ovAdm').classList.contains('on')) admRender();
+      }, err=>{ console.error(err); });
+    } else {
+      try{ Cfg.last = JSON.parse(localStorage.getItem(CFG_LS)||'null'); }catch(e){ Cfg.last=null; }
+      applyCfg(Cfg.last); refreshListsUI();
+    }
+  },
+  snapshot(){
+    const act={}; Object.keys(DEF_ACT).forEach(t=>{ act[TEMA_KEY[t]] = (ACT[t]||[]).slice(); });
+    act[TEMA_KEY['OTRO']] = ACT_OTRO.slice();
+    return { version:1, responsables:RESPONSABLES.slice(), act, actualizado:Date.now() };
+  },
+  save(){
+    const c=this.snapshot();
+    if(usingFirebase) return db.ref(CFG_NODO).set(c);
+    try{ localStorage.setItem(CFG_LS, JSON.stringify(c)); this.last=c; }catch(e){ return Promise.reject(e); }
+    return Promise.resolve();
+  }
+};
+function admSave(okMsg){
+  return Cfg.save().then(()=>{ if(okMsg) toast(okMsg,'ok'); }).catch(e=>{
+    console.error(e);
+    applyCfg(Cfg.last); refreshListsUI(); admRender();
+    toast('No se pudo guardar. Revisa las reglas de Firebase para el nodo "'+CFG_NODO+'"','err');
+  });
+}
+function bulkMetaUpdate(keys,field,value){
+  if(!keys.length) return Promise.resolve();
+  if(usingFirebase){ const u={}; keys.forEach(k=>{ u[k+'/meta/'+field]=value; }); return ref.update(u); }
+  keys.forEach(k=>{ if(Store.map[k] && Store.map[k].meta) Store.map[k].meta[field]=value; });
+  Store._saveLocal(); Store._loadLocal(); Store._cb();
+  return Promise.resolve();
+}
+
+/* ═══════════ PANEL ADMINISTRAR DATOS ═══════════ */
+const ADM_TEMAS = ['SEGURIDAD','CONVIVENCIA','ENTORNOS ESCOLARES','DD.HH.','MESAS DE TRABAJO','OTRO'];
+let admCurTab = 'resp';
+function admEsc(s){ return String(s).replace(/&/g,'&amp;').replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+function admList(t){ return t==='OTRO' ? ACT_OTRO : ACT[t]; }
+function admTema(){ return $('admTema').value || ADM_TEMAS[0]; }
+function openAdm(){
+  const sel=$('admTema');
+  if(!sel.options.length) sel.innerHTML=ADM_TEMAS.map(t=>`<option>${t}</option>`).join('');
+  $('ovAdm').classList.add('on');
+  admTab(admCurTab);
+}
+function closeAdm(){ $('ovAdm').classList.remove('on'); }
+function admTab(t){
+  admCurTab=t;
+  $('admTabResp').classList.toggle('on',t==='resp');
+  $('admTabAct').classList.toggle('on',t==='act');
+  $('admPaneResp').style.display = t==='resp'?'block':'none';
+  $('admPaneAct').style.display = t==='act'?'block':'none';
+  admRender();
+}
+function admRender(){
+  if(admCurTab==='resp'){
+    const q=($('admRespQ').value||'').toUpperCase().trim();
+    const counts={}; Store.list.forEach(r=>{ const n=r.meta&&r.meta.responsable; if(n) counts[n]=(counts[n]||0)+1; });
+    const rows=RESPONSABLES.map((n,i)=>({n,i})).filter(o=>!q||o.n.includes(q));
+    $('admRespCount').textContent = RESPONSABLES.length+' contratistas'+(q?` · ${rows.length} coinciden`:'');
+    $('admRespList').innerHTML = rows.map(o=>`<div class="adm-row">
+      <input type="text" value="${admEsc(o.n)}" onchange="admRespRename(${o.i},this)">
+      <span class="adm-cnt">${counts[o.n]||0} reg.</span>
+      <button class="adm-ico danger" title="Eliminar" onclick="admRespDel(${o.i})">🗑️</button></div>`).join('')
+      || '<div class="empty" style="padding:24px">Sin contratistas</div>';
+  } else {
+    const t=admTema(), arr=admList(t)||[];
+    const counts={}; Store.list.forEach(r=>{ const m=r.meta||{}; if(m.tematica===t && m.actividad) counts[m.actividad]=(counts[m.actividad]||0)+1; });
+    $('admActCount').textContent = arr.length+' actividades en '+t;
+    $('admActList').innerHTML = arr.map((n,i)=>`<div class="adm-row">
+      <input type="text" value="${admEsc(n)}" onchange="admActRename(${i},this)">
+      <span class="adm-cnt">${counts[n]||0} reg.</span>
+      <button class="adm-ico" title="Subir" onclick="admActMove(${i},-1)" ${i===0?'disabled':''}>↑</button>
+      <button class="adm-ico" title="Bajar" onclick="admActMove(${i},1)" ${i===arr.length-1?'disabled':''}>↓</button>
+      <button class="adm-ico danger" title="Eliminar" onclick="admActDel(${i})">🗑️</button></div>`).join('')
+      || '<div class="empty" style="padding:24px">Sin actividades en esta temática</div>';
+  }
+}
+/* — Contratistas — */
+function admRespAdd(){
+  const el=$('admNewResp'); const v=el.value.trim().toUpperCase();
+  if(!v){ toast('Escribe el nombre','err'); return; }
+  if(RESPONSABLES.includes(v)){ toast('Ese contratista ya existe','err'); return; }
+  RESPONSABLES.push(v); el.value=''; admRender(); refreshListsUI();
+  admSave('Contratista agregado'); el.focus();
+}
+function admRespRename(i,el){
+  const old=RESPONSABLES[i], nu=el.value.trim().toUpperCase();
+  if(!nu){ el.value=old; toast('El nombre no puede quedar vacío','err'); return; }
+  if(nu===old){ el.value=old; return; }
+  if(RESPONSABLES.some((x,j)=>j!==i&&x===nu)){ el.value=old; toast('Ya existe un contratista con ese nombre','err'); return; }
+  const keys=Store.list.filter(r=>r.meta&&r.meta.responsable===old).map(r=>r._k);
+  let upd=false;
+  if(keys.length) upd=confirm(`Renombrar "${old}" → "${nu}".\n\nHay ${keys.length} registro(s) con el nombre anterior.\n\nAceptar = actualizar también esos registros.\nCancelar = cambiar solo el nombre en la lista (los registros conservan el anterior).`);
+  RESPONSABLES[i]=nu; admRender(); refreshListsUI();
+  admSave('Contratista actualizado').then(()=>{ if(upd) return bulkMetaUpdate(keys,'responsable',nu); });
+}
+function admRespDel(i){
+  const n=RESPONSABLES[i];
+  if(!confirm(`¿Eliminar a "${n}" de la lista?\n\nLos registros ya guardados conservan su nombre.`)) return;
+  RESPONSABLES.splice(i,1); admRender(); refreshListsUI(); admSave('Contratista eliminado');
+}
+function admRespSort(){
+  RESPONSABLES.sort((a,b)=>a.localeCompare(b,'es')); admRender(); refreshListsUI(); admSave('Lista ordenada A→Z');
+}
+/* — Tipos de actividad — */
+function admActAdd(){
+  const t=admTema(), arr=admList(t), el=$('admNewAct'); const v=el.value.trim().toUpperCase();
+  if(!v){ toast('Escribe el nombre de la actividad','err'); return; }
+  if(arr.includes(v)){ toast('Esa actividad ya existe en '+t,'err'); return; }
+  arr.push(v); el.value=''; admRender(); refreshListsUI();
+  admSave('Actividad agregada'); el.focus();
+}
+function admActRename(i,el){
+  const t=admTema(), arr=admList(t), old=arr[i], nu=el.value.trim().toUpperCase();
+  if(!nu){ el.value=old; toast('El nombre no puede quedar vacío','err'); return; }
+  if(nu===old){ el.value=old; return; }
+  if(arr.some((x,j)=>j!==i&&x===nu)){ el.value=old; toast('Ya existe esa actividad en '+t,'err'); return; }
+  const keys=Store.list.filter(r=>r.meta&&r.meta.tematica===t&&r.meta.actividad===old).map(r=>r._k);
+  let upd=false;
+  if(keys.length) upd=confirm(`Renombrar "${old}" → "${nu}".\n\nHay ${keys.length} registro(s) con el nombre anterior.\n\nAceptar = actualizar también esos registros.\nCancelar = cambiar solo el nombre en la lista (los registros conservan el anterior).`);
+  arr[i]=nu; admRender(); refreshListsUI();
+  admSave('Actividad actualizada').then(()=>{ if(upd) return bulkMetaUpdate(keys,'actividad',nu); });
+}
+function admActDel(i){
+  const t=admTema(), arr=admList(t);
+  if(!confirm(`¿Eliminar "${arr[i]}" de ${t}?\n\nLos registros ya guardados conservan su actividad.`)) return;
+  arr.splice(i,1); admRender(); refreshListsUI(); admSave('Actividad eliminada');
+}
+function admActMove(i,d){
+  const arr=admList(admTema()), j=i+d; if(j<0||j>=arr.length) return;
+  [arr[i],arr[j]]=[arr[j],arr[i]]; admRender(); refreshListsUI(); admSave();
+}
+function admRestore(){
+  if(admCurTab==='resp'){
+    if(!confirm('¿Restaurar la lista ORIGINAL de contratistas? Se perderán los cambios hechos en esta lista.')) return;
+    RESPONSABLES.length=0; DEF_RESP.forEach(x=>RESPONSABLES.push(x));
+  } else {
+    const t=admTema();
+    if(!confirm(`¿Restaurar las actividades ORIGINALES de ${t}? Se perderán los cambios hechos en esa temática.`)) return;
+    if(t==='OTRO'){ ACT_OTRO.length=0; DEF_OTRO.forEach(x=>ACT_OTRO.push(x)); }
+    else ACT[t]=DEF_ACT[t].slice();
+  }
+  admRender(); refreshListsUI(); admSave('Valores originales restaurados');
+}
+
 const TEMA_RECORRIDO = ["MAL PARQUEO VEHICULAR","PREVENCIÓN AL HURTO (PERSONAS, COMERCIO, VEHICULOS Y RESIDENCIAS)","HABITABILIDAD EN CALLE - CARRETEROS","MANEJOS DE RESIDUOS","PREVENCIÓN AL CONSUMO DE SPA","RUTAS DE ATENCIÓN , ACCESO A LA JUSTICIA Y PROMOCIÓN A LA DENUNCIA","DECÁLOGO BUEN COMERCIANTE","PREVENCIÓN DE VIOLENCIAS - DELITOS SEXUALES","PREVENCIÓN A LA EXTORSIÓN","TENENCIA RESPONSABLE DE ANIMALES DE COMPAÑÍA"];
 const COLEGIOS = ["LICEO COMERCIAL DE LAS AMÉRICAS","COLEGIO REPÚBLICA DE COLOMBIA","COLEGIO NIDIA QUINTERO DE TURBAY","COLEGIO ESTRADA MARIA AUXILIADORA","COLEGIO REPUBLICA DE CHINA (IED) SEDE A","COLEGIO LICEO JUAN JOSE RONDON","INSTITUTO TECNICO INDUSTRIAL CENTRO DON BOSCO","COLEGIO INSTITUTO TECNICO INDUSTRIAL FRANCISCO JOSE DE CALDAS (IED) SEDE A","COLEGIO GUILLERMO LEON VALENCIA (IED)","COLEGIO CAMPESTRE LOS PINOS","COLEGIO NESTOR FORERO ALCALA (IED) SEDE A","COLEGIO NACIONES UNIDAS (IED) SEDE A","COLEGIO GENERAL SANTANDER (IED) SEDE A","COLEGIO CAFAM","COLEGIO RODOLFO LLINAS (IED) SEDE A","COLEGIO ELISA BORRERO DE PASTRANA","COLEGIO NUEVA CONSTITUCION","COLEGIO REPUBLICA DE CHINA SEDE A","COLEGIO MANUELA AYALA DE GAITAN SEDE B","COLEGIO GARCES NAVAS","COLEGIO COLSUBSIDIO","COLEGIO EL ESCORIAL","COLEGIO TOMAS CIPRIANO DE MOSQUERA","COLEGIO ANTONIO VILLAVICENCIO SEDE C","COLEGIO FRANCISCO JOSE DE CALDAS SEDE A","COLEGIO ROBERT F KENEDY","COLEGIO MIGUEL ANTONIO CARO","COLEGIO LUCILA RUBIO DE LA VERDE","COLEGIO SAN JOSÉ NORTE SEDE A","COLEGIO MANUELA AYALA DE GAITAN SEDE A","COLEGIO INSTITUTUTO TECNICO LAUREANO GOMEZ"];
 const ENTIDADES = ["POLICÍA NACIONAL","SECRETARIA DISTRITAL DE SEGURIDAD","SECRETARIA DISTRITAL DE GOBIERNO","ALE (AMBIENTE, DESARROLLO ECONÓMICO, PARTICIPACIÓN, CULTURA Y DEPORTE, ETC.)","SECRETARIA DISTRITAL DE INTEGRACIÓN SOCIAL","SECRETARIA DISTRITAL DE MOVILIDAD","SECRETARIA DISTRITAL DE EDUCACIÓN - DILE","SECRETARIA DISTRITAL DE SALUD","SECRETARIA DISTRITAL DE LA MUJER","SECRETARIA DISTRITAL DE AMBIENTE","UAESP","IDIPRON","ICBF","PERSONERÍA DISTRITAL - LOCAL","EJERCITO NACIONAL","ARMADA NACIONAL","FUERZA AEROESPACIAL COLOMBIANA","DADEP","RACE","GESTORES DE TRANSMILENIO","COMUNIDAD","SYC","N/A"];
@@ -1857,6 +2116,7 @@ function reporteRenderLista(){
   if(!filtrados.length){
     lista.innerHTML='<div style="text-align:center;padding:40px;color:#94a3b8;font-size:13px">No hay registros con los filtros actuales</div>';
     reporteActualizarBoton();
+    reporteActualizarBotonExcel(0);
     if(resumen) resumen.style.display='none';
     return;
   }
@@ -1895,6 +2155,7 @@ function reporteRenderLista(){
     rptTxt.textContent=nSel+' registro(s) seleccionado(s) para el reporte';
   } else if(resumen){ resumen.style.display='none'; }
   reporteActualizarBoton();
+  reporteActualizarBotonExcel(filtrados.length);
 }
 
 function reporteToggle(key){
@@ -1924,6 +2185,62 @@ function reporteActualizarBoton(){
     if(n>0){ btn.disabled=false; btn.style.background='linear-gradient(135deg,#1e293b,#1e3a8a)'; btn.style.cursor='pointer'; }
     else { btn.disabled=true; btn.style.background='#94a3b8'; btn.style.cursor='not-allowed'; }
   }
+}
+function reporteActualizarBotonExcel(n){
+  const btn=$('btn-descargar-excel'), cnt=$('reporte-excel-cnt');
+  if(cnt) cnt.textContent=n;
+  if(btn){
+    if(n>0){ btn.disabled=false; btn.style.background='linear-gradient(135deg,#166534,#15803d)'; btn.style.cursor='pointer'; }
+    else { btn.disabled=true; btn.style.background='#94a3b8'; btn.style.cursor='not-allowed'; }
+  }
+}
+function reporteDescargarExcel(){
+  const filtrados=reporteGetFiltrados();
+  if(!filtrados.length){ toast('⚠ No hay registros con los filtros actuales','err'); return; }
+  const filas=filtrados.map(r=>{
+    const m=r.meta||{}, ind=r.ind||{};
+    const fila={
+      'Fecha': fmtDate(m.fecha),
+      'Temática': m.tematica||'',
+      'Actividad': m.actividad||'',
+      'Hora inicio': m.horaInicio||'',
+      'Hora fin': m.horaFin||'',
+      'Responsable': m.responsable||'',
+      'Dirección': m.direccion||'',
+      'Lugar': m.lugar||'',
+      'UPZ': m.upz||'',
+      'Barrio': m.barrio||'',
+      'Modalidad': m.modalidad||'',
+      'Proximidad a colegio': m.proximidad||'',
+      'Tipo de entorno': m.tipoEntorno||'',
+      'Colegio': m.entornoEscolar||'',
+      'Parque': m.nombreParque||'',
+      'Número CLP': m.numeroCLP||'',
+      'Temática recorrido': m.tematicaRecorrido||'',
+      'Tipo jornada ZS': m.tipoJornadaZS||'',
+      'Cancelada': m.cancelada||'NO',
+      'Razón cancelación': m.razonCancelacion||'',
+      'Entidades participantes': Array.isArray(m.entidades)?m.entidades.join(', '):(m.entidades||''),
+      'Con acta': (m.linkActa&&m.linkActa.trim())?'SI':'NO',
+      'Link acta': m.linkActa||'',
+      'Desarrollo': m.desarrollo||'',
+      'Observaciones': m.observaciones||'',
+      'Compromisos': m.compromisos||''
+    };
+    IND_KEYS.forEach(k=>{ fila[IND_LABEL[k]] = Number(ind[k])||0; });
+    return fila;
+  });
+  const ws=XLSX.utils.json_to_sheet(filas);
+  const anchos=Object.keys(filas[0]).map(h=>({wch: Math.min(Math.max(h.length,12), 40)}));
+  ws['!cols']=anchos;
+  const wb=XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, 'Operativos y Actividades');
+  const desde=$('rpt-desde')?.value||'', hasta=$('rpt-hasta')?.value||'';
+  let sufijo='';
+  if(desde||hasta) sufijo='_'+(desde||'inicio')+'_a_'+(hasta||'hoy');
+  const hoy=new Date().toISOString().split('T')[0];
+  XLSX.writeFile(wb, `Reporte_SYC_Engativa${sufijo}_${hoy}.xlsx`);
+  toast('✅ Excel descargado ('+filtrados.length+' registro(s))','ok');
 }
 function reporteDescargarPDF(){
   const keySet=new Set(Array.from(_reporteSeleccionados));
@@ -2026,6 +2343,7 @@ function generarPDFReporteSeg(lista,filtrosTexto){
 buildUI();
 onTemaChange(); updateConds();
 Store.init(()=>{ renderRecs(); if($('mview-dash').classList.contains('on')) renderDash(); });
+Cfg.init();
 </script>
 </body>
 </html>
